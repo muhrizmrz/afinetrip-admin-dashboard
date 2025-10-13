@@ -28,5 +28,22 @@ body {
   height: 1px;
   background: #6E6E6E;
   width: 180px; 
-  /* margin: 0 8px;  */
+}
+
+
+.custom-thumb::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #E5BC3B;
+  cursor: pointer;
+}
+
+.custom-thumb::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #E5BC3B;
+  cursor: pointer;
 }

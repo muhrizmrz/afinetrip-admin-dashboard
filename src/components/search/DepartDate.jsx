@@ -62,7 +62,7 @@ const DepartDate = ({ label = 'Depart', selectedDate: initialDate, onDateSelect,
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
   return (
-    <div className="input-list px-4 text-[#15144E] flex flex-col justify-center">
+    <div className="input-list text-[#15144E] flex flex-col items-start w-full md:w-auto text-center md:text-left  border rounded-xl border-[#ddd] p-3 md:border-0 md:rounded-none">
       <div className="flex items-center">
         <span className="block text-sm uppercase">{label}</span>
         <IoIosArrowDown onClick={handleToggleCalendar} className="cursor-pointer ml-2" />

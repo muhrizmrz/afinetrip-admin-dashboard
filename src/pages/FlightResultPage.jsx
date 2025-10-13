@@ -8,7 +8,7 @@ const FlightResultPage = () => {
     <div className="gradient-bg min-h-screen flex flex-col">
       <Header />
         <main>
-            <SearchSummary />
+          <SearchSummary />
         </main>
       <Footer />  
     </div>
