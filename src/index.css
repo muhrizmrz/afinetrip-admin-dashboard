@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-   font-family: "Roboto", sans-serif;
+   font-family: "Roboto", sans-serif !important;
 }
 .gradient-bg {
-  background-image: linear-gradient(to bottom, #D9D9D9 3%, #FAF3DB 47%, #F4F4FF 100%);
+  background-image: linear-gradient(to left, #D9D9D9 3%, #FAF3DB 47%, #F4F4FF 100%);
 }
 .form-checkbox{
   padding: 1rem !important;
@@ -46,4 +46,12 @@ body {
   border-radius: 50%;
   background: #E5BC3B;
   cursor: pointer;
+}
+.container {
+    max-width: 1220px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
 }

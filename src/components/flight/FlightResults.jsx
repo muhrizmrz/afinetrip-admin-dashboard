@@ -1,16 +1,19 @@
 import { React, useState } from 'react';
-import calenderIcon from '../images/calender_icon.svg';
+import calenderIcon from '/images/calender_icon.svg';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoAirplane } from "react-icons/io5";
 import { GoDotFill } from "react-icons/go";
-import britishAirwaysLogo from '../images/british_airways_logo.svg';
-import turkishAirlinesLogo from '../images/turkish_airlines_logo.svg';
-import AirIndiaLogo from '../images/air_india_logo.svg';
-import FareSlider from '../flight/FareSlider';
-import CheckIn from './images/checkin.svg';
-import Cabin from './images/cabin.svg';
-import Seat from './images/seat.svg';
+
+import britishAirwaysLogo from '/images/british_airways_logo.svg';
+import turkishAirlinesLogo from '/images/turkish_airlines_logo.svg';
+import AirIndiaLogo from '/images/air_india_logo.svg';
+import CheckIn from '/images/checkin_bag.svg';
+import Cabin from '/images/cabin_bag.svg';
+import Seat from '/images/seat.svg';
+
 import SortedFlight from './SortedFlight';
+import FareSlider from './FareSlider';
+
 import StopsFilter from './filters/StopsFilter';
 import TimeSelector from './filters/TimeSelector';
 import PriceRangeFilter from './filters/PriceRangeFilter';

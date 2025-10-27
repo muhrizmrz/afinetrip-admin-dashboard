@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import sunrise from '../../images/sunrise.svg';
-import full_sun from '../../images/full_sun.svg';
-import sunset from '../../images/sunset.svg';
-import moon from '../../images/moon.svg';
+import sunrise from '/images/sunrise.svg';
+import full_sun from '/images/full_sun.svg';
+import sunset from '/images/sunset.svg';
+import moon from '/images/moon.svg';
 
 const TimeSelector = ({ title }) => {
   const [selectedTimes, setSelectedTimes] = useState({

@@ -1,22 +1,14 @@
 import { useState } from "react";
 import logo from "/images/logo.svg";
-import holiday from "/images/holiday.svg";
 
-import { IoMdAirplane, IoIosArrowDown } from "react-icons/io";
-import { FaHotel, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import { IoIosArrowDown } from "react-icons/io";
+import { FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 
 export default function Header() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Flight");
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const tabs = [
-    { name: "Flight", icon: <IoMdAirplane className="w-5 h-5 transform rotate-45" /> },
-    { name: "Hotel", icon: <FaHotel className="w-5 h-5" /> },
-    { name: "Holiday", icon: <img src={holiday} className="w-5 h-5" alt="Holiday" /> },
-  ];
 
   return (
     <header className="bg-white shadow-sm fixed w-full z-50">
@@ -24,32 +16,13 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center space-x-4 md:space-x-20">
           <img src={logo} alt="AFineTrip" className="h-auto w-28" />
-
-          {/* Desktop Tabs */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {tabs.map((tab) => (
-              <button
-                key={tab.name}
-                onClick={() => setActiveTab(tab.name)}
-                className={`flex items-center gap-2 text-[#15144E] min-w-[80px] ${
-                  activeTab === tab.name ? "font-semibold" : "font-normal"
-                }`}
-              >
-                {tab.icon}
-                {tab.name}
-              </button>
-            ))}
-          </nav>
         </div>
 
         {/* Right side desktop */}
         <div className="hidden md:flex items-center space-x-8 text-[16px] relative text-[#15144E] font-normal">
           {/* Quick Links Dropdown */}
           <div className="relative">
-            <div
-              className="flex items-center cursor-pointer space-x-2"
-              onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-            >
+            <div className="flex items-center cursor-pointer space-x-2" onClick={() => setQuickLinksOpen(!quickLinksOpen)} >
               <span>Quick Links</span>
               <IoIosArrowDown className="w-4 h-4" />
             </div>
@@ -79,12 +52,9 @@ export default function Header() {
           <FaBell className="w-5 h-5 cursor-pointer" />
 
           <div className="relative">
-            <div
-              className="flex items-center space-x-2 cursor-pointer text-[18px]"
-              onClick={() => setProfileOpen(!profileOpen)}
-            >
+            <div className="flex items-center space-x-2 cursor-pointer text-[18px]" onClick={() => setProfileOpen(!profileOpen)} >
               <FaUser className="w-4 h-4" />
-              <span>Moideen Shibili</span>
+                <span>Admin</span>
               <IoIosArrowDown className="w-4 h-4" />
             </div>
 
@@ -103,10 +73,7 @@ export default function Header() {
         </div>
 
         {/* Hamburger Menu (Mobile/Tablet) */}
-        <button
-          className="md:hidden text-[#15144E] text-2xl focus:outline-none"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="md:hidden text-[#15144E] text-2xl focus:outline-none" onClick={() => setMenuOpen(!menuOpen)} >
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -115,38 +82,13 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-md">
           <nav className="flex flex-col space-y-4 px-6 py-4 text-[#15144E] text-[16px] font-normal">
-            {/* Tabs */}
-            {tabs.map((tab) => (
-              <button
-                key={tab.name}
-                onClick={() => {
-                  setActiveTab(tab.name);
-                  setMenuOpen(false);
-                }}
-                className={`flex items-center gap-2 ${
-                  activeTab === tab.name ? "font-semibold" : "font-normal"
-                }`}
-              >
-                {tab.icon}
-                {tab.name}
-              </button>
-            ))}
-
-            {/* Divider */}
-            <hr />
-
+      
             {/* Quick Links */}
             <div>
-              <div
-                className="flex items-center justify-between cursor-pointer"
-                onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-              >
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setQuickLinksOpen(!quickLinksOpen)}>
                 <span>Quick Links</span>
-                <IoIosArrowDown
-                  className={`w-4 h-4 transform transition-transform ${
-                    quickLinksOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                <IoIosArrowDown className={`w-4 h-4 transform transition-transform ${
+                quickLinksOpen ? "rotate-180" : "rotate-0" }`} />
               </div>
               {quickLinksOpen && (
                 <ul className="mt-2 ml-2 space-y-2 text-sm">
@@ -170,16 +112,10 @@ export default function Header() {
 
             {/* Profile */}
             <div>
-              <div
-                className="flex items-center justify-between cursor-pointer"
-                onClick={() => setProfileOpen(!profileOpen)}
-              >
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setProfileOpen(!profileOpen)}>
                 <span>Moideen Shibili</span>
-                <IoIosArrowDown
-                  className={`w-4 h-4 transform transition-transform ${
-                    profileOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                <IoIosArrowDown className={`w-4 h-4 transform transition-transform ${
+                    profileOpen ? "rotate-180" : "rotate-0" }`} />
               </div>
               {profileOpen && (
                 <ul className="mt-2 ml-2 space-y-2 text-sm">

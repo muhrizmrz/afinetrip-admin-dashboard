@@ -1,4 +1,4 @@
-import footer_logo from '../images/footer_logo.svg'
+import footer_logo from '/images/footer_logo.svg'
 import { IoLocation } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";

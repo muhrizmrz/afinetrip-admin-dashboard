@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { IoIosArrowDown } from "react-icons/io";
-import biDirectionalArrow from '../images/bidirectional_arrow.svg'
-import footerLogo from '../images/footer_image.svg'
+import biDirectionalArrow from '/images/bidirectional_arrow.svg'
+import footerImage from '/images/footer_image.svg'
 import FlightResults from '../flight/FlightResults'
 import DepartDate from './DepartDate';
+import  Checkbox from '../flight/filters/Checkbox'
 
 const SearchSummary = () => {
   const [tripType, setTripType] = useState('One Way');
@@ -20,7 +21,7 @@ const SearchSummary = () => {
   });
 
   return (
-   <div className='max-w-6xl mx-auto mt-40'>
+   <div className='container mx-auto mt-40'>
       <div className="flex flex-col sm:flex-wrap md:flex-nowrap md:flex-row justify-center md:justify-between items-center gap-4 text-[#15144E] text-center">
         {/* Trip Type Buttons */}
         <div className="flex flex-wrap justify-center items-center gap-3">
@@ -42,36 +43,26 @@ const SearchSummary = () => {
         {/* Filters */}
         <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 text-base sm:text-sm mt-2 md:mt-0">
           {[
-              { key: "directFlight", label: "Direct Flight" },
-              { key: "nearbyAirport", label: "Nearby Airport" },
-              { key: "studentFare", label: "Student Fare" },
-              { key: "seniorCitizenFare", label: "Sr.Citizen Fare" },
+            { key: "directFlight", label: "Direct Flight" },
+            { key: "nearbyAirport", label: "Nearby Airport" },
+            { key: "studentFare", label: "Student Fare" },
+            { key: "seniorCitizenFare", label: "Sr.Citizen Fare" },
           ].map((filter) => (
-            <label key={filter.label} className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters[filter.key]}
+            <Checkbox
+              key={filter.key}
+              label={filter.label}
+              value={filters[filter.key]}
               onChange={() =>
-              setFilters((prev) => ({
-                ...prev,
-                [filter.key]: !prev[filter.key],
-              }))
-            }
-            className="appearance-none w-5 h-5 border border-[#15144E] rounded bg-white checked:bg-white"
-              style={{
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100%", 
-                backgroundImage: filters[filter.key]
-                ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='%23FCBE00' stroke-width='4' fill='none' viewBox='0 0 24 24'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E\")"
-                  : "none",
-             }}
+                setFilters((prev) => ({
+                  ...prev,
+                  [filter.key]: !prev[filter.key],
+                }))
+              }
+              className="text-sm"
             />
-            <span className="text-[#15144E] font-medium">{filter.label}</span>
-          </label>
-
           ))}
         </div>
+
       </div>
       
 
@@ -147,7 +138,7 @@ const SearchSummary = () => {
       
       <FlightResults/>
      
-     <img src={footerLogo} alt="Footer Image" className="w-full h-auto" />
+     <img src={footerImage} alt="Footer Image" className="w-full h-auto" />
    </div>
   
   );

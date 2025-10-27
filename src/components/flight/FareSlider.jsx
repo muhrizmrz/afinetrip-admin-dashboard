@@ -1,14 +1,13 @@
 import { useState, useRef } from "react";
-import cancellation from "../images/cancellation.svg";
-import dataChange from "../images/data_change.svg";
-import seatSelection from "../images/seat_selection.svg";
-import checkedBag from "../images/checked_bag.svg";
-import handBag from "../images/hand_bag.svg";
-import meal from "../images/meal.svg";
+import cancellation from "/images/cancellation.svg";
+import dataChange from "/images/data_change.svg";
+import seatSelection from "/images/seat_selection.svg";
+import checkedBag from "/images/checked_bag.svg";
+import handBag from "/images/hand_bag.svg";
+import meal from "/images/meal.svg";
 
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { IoIosInformationCircle } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
 
 const FareSlider = ({ selectedFlight, closeFareDetails }) => {
   const [selectedFare, setSelectedFare] = useState("Basic1");
@@ -84,7 +83,7 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
 
   const selectedFareObject = fares.find((fare) => fare.id === selectedFare);
 
-  const faresToShow = 3; // Show 3 fare cards at a time
+  const faresToShow = 3;
 
   const handleNext = () => {
     if (startIndex + faresToShow < fares.length) {
@@ -145,8 +144,7 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
             {fares.map((fare) => (
               <div
                 key={fare.id}
-                className=" px-2 flex-shrink-0" // Each card takes exactly 1/3 of the slider width
-              >
+                className=" px-2 flex-shrink-0">
                 <div
                   className={`bg-white border border-[#E2E2E2] rounded-xl p-5 flex flex-col justify-between h-full ${
                     selectedFare === fare.id ? "border-[#15144E]" : ""
