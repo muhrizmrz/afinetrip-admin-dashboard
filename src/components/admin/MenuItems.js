@@ -48,13 +48,22 @@ export const sideBarMenuItems = [
     name: "Marketing & Support",
     image: "/images/blog_management.svg",
     link: "/admin",
-    subItems: [{ name: "Add New Customer", image: "", link: "/addnewcustomer" }],
+    subItems: [
+      { name: "Add New Customer", image: "", link: "/addnewcustomer" },
+    ],
   },
   {
     name: "System Settings",
     image: "/images/currency_management.svg",
     link: "/systemsettings",
   },
+];
+
+export const agentClassListHeader = [
+  { field: "id", headerName: "#" },
+  { field: "name", headerName: "Name" },
+  { field: "description", headerName: "Description" },
+  { field: "action", headerName: "Action" },
 ];
 
 export const flightBookTableHeader = [

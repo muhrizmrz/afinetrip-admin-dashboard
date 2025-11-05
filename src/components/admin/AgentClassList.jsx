@@ -1,13 +1,7 @@
 import Breadcrumbs from "./Breadcrumbs";
 import { MdDelete } from "react-icons/md";
+import { agentClassListHeader } from "./MenuItems";
 
-// table Headers
-const columns = [
-  { field: "id", headerName: "#" },
-  { field: "name", headerName: "Name" },
-  { field: "description", headerName: "Description" },
-  { field: "action", headerName: "Action" },
-];
 
 // Dummy Data
 const rows = [
@@ -44,7 +38,7 @@ export default function AgentClassList() {
         <table className="table-auto w-full  bg-white border border-gray-200">
           <thead className="bg-gray-100 border-b border-gray-200">
             <tr>
-              {columns.map((col) => (
+              {agentClassListHeader.map((col) => (
                 <th
                   key={col.field}
                   className={`px-5 py-5 ${

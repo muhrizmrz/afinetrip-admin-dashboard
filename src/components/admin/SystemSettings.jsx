@@ -6,6 +6,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import { FaCircleInfo } from "react-icons/fa6";
+import ImageUpload from "../utility/ImageUpload";
 
 export default function SystemSettings() {
   const today = new Date();
@@ -33,7 +34,9 @@ export default function SystemSettings() {
       image.onload = () => {
         const { width, height } = image;
         if (width > 400 || height > 65) {
-          setLogoFileName(`Image dimensions must be at most 400x65 pixels. Got: ${width}x${height}`);
+          setLogoFileName(
+            `Image dimensions must be at most 400x65 pixels. Got: ${width}x${height}`
+          );
         } else {
           setLogoFileName(file.name);
         }
@@ -58,7 +61,9 @@ export default function SystemSettings() {
       image.onload = () => {
         const { width, height } = image;
         if (width > 32 || height > 32) {
-          setFaviconFileName(`Image dimensions must be at most 32x32 pixels. Got: ${width}x${height}`);
+          setFaviconFileName(
+            `Image dimensions must be at most 32x32 pixels. Got: ${width}x${height}`
+          );
         } else {
           setFaviconFileName(file.name);
         }
@@ -161,35 +166,17 @@ export default function SystemSettings() {
               <div className="text-gray-500 text-sm mb-4"> Current Logo</div>
               <img src="./public/images/logo.svg" alt="logo" />
             </div>
-            <div className="w-full flex flex-col mb-4">
-              <label className="mb-2 text-[#15144e] text-sm">Change Logo</label>
-
-              <div className="flex items-center border border-[#d0d0d0] rounded w-full overflow-hidden mb-2">
-                <div className="flex-grow px-3 py-2 text-sm text-gray-700 truncate  cursor-pointer">
-                  {logoFileName || "No image selected"}
-                </div>
-
-                <label
-                  htmlFor="image-upload"
-                  className="border border-[#15144E] text-[#15144E] px-2 mr-1 py-1 rounded text-sm cursor-pointer hover:bg-[#15144E] hover:text-white transition duration-300 whitespace-nowrap"
-                >
-                  Choose File
-                </label>
-
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/png"
-                  onChange={handleLogoChange}
-                  className="hidden"
-                />
-              </div>
-              <div className="flex text-xs">
-                <FaCircleInfo className="text-[#15144E]" />
-                <span className="ml-1">
-                  Please select .png file and size should be 400*65 px.
-                </span>
-              </div>
+            <ImageUpload
+              fileName={logoFileName}
+              title="Change Favicon"
+              onChange={handleLogoChange}
+              titleClassName="text-sm"
+            />
+            <div className="flex text-xs">
+              <FaCircleInfo className="text-[#15144E]" />
+              <span className="ml-1">
+                Please select .png file and size should be 400*65 px.
+              </span>
             </div>
             <div className="flex justify-end">
               <button className="rounded px-3 py-2 bg-[#15144E] text-white">
@@ -205,37 +192,19 @@ export default function SystemSettings() {
               <div className="text-gray-500 text-sm mb-4"> Current Favicon</div>
               <img src="./public/images/logo.svg" alt="favicon" />
             </div>
-            <div className="w-full flex flex-col mb-4">
-              <label className="mb-2 text-[#15144e] text-sm">
-                Change Favicon
-              </label>
 
-              <div className="flex items-center border border-[#d0d0d0] rounded w-full overflow-hidden mb-2">
-                <div className="flex-grow px-3 py-2 text-sm text-gray-700 truncate  cursor-pointer">
-                  {faviconFileName || "No image selected"}
-                </div>
+            <ImageUpload
+              fileName={faviconFileName}
+              title="Change Favicon"
+              onChange={handleFaviconChange}
+              titleClassName="text-sm"
+            />
 
-                <label
-                  htmlFor="image-upload"
-                  className="border border-[#15144E] text-[#15144E] px-2 mr-1 py-1 rounded text-sm cursor-pointer hover:bg-[#15144E] hover:text-white transition duration-300 whitespace-nowrap"
-                >
-                  Choose File
-                </label>
-
-                <input
-                  id="favicon-upload"
-                  type="file"
-                  accept="image/png"
-                  onChange={handleFaviconChange}
-                  className="hidden"
-                />
-              </div>
-              <div className="flex text-xs">
-                <FaCircleInfo className="text-[#15144E]" />
-                <span className="ml-1">
-                  Please select .png file and size should be 32*32 px.
-                </span>
-              </div>
+            <div className="flex text-xs">
+              <FaCircleInfo className="text-[#15144E]" />
+              <span className="ml-1">
+                Please select .png file and size should be 32*32 px.
+              </span>
             </div>
             <div className="flex justify-end">
               <button className="rounded px-3 py-2 bg-[#15144E] text-white">
@@ -245,6 +214,7 @@ export default function SystemSettings() {
           </div>
         </div>
       </div>
+
       <h1 className="text-xl font-semibold text-[#15144E] mb-4">
         Update Details
       </h1>
