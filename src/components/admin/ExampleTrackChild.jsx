@@ -1,60 +1,43 @@
-import * as React from 'react';
-import Switch from '@mui/joy/Switch';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
+import { useState } from "react";
 
 export default function ExampleTrackChild() {
-  const [isActive, setIsActive] = React.useState(true);
+  const [isActive, setIsActive] = useState(true);
 
   return (
-    <Stack direction="row" spacing={2} sx={{ width: '100%', maxWidth: '300px', margin: '0 auto' }}>
-      <Switch
-        checked={isActive}
-        onChange={(event) => setIsActive(event.target.checked)}
-        slotProps={{
-          track: {
-            children: isActive ? (
-              <Typography component="span" level="inherit" sx={{ m:'8px',color: '#EEEEEE' }}>
-                Active
-              </Typography>
-            ) : (
-              <Typography component="span" level="inherit" sx={{ m:'8px',color: '#15144E' }}>
-                Inactive
-              </Typography>
-            ),
-          },
-          thumb: {
-            children: isActive ? (
-              <Typography component="span" level="inherit" sx={{ color: '#15144E' }}>
-                Inactive
-              </Typography>
-            ) : (
-              <Typography component="span" level="inherit" sx={{color: '#EEEEEE' }}>
-                Active
-              </Typography>
-            ),
-          },
-        }}
-        sx={{
-          '--Switch-thumbSize': '50%',
-          '--Switch-trackWidth': '100%',
-          '--Switch-trackHeight': '2%',
-          '--Switch-thumbHeight': '100%',
-          '--Switch-thumbBackground': isActive ? '#EEEEEE' : '#15144E',
-          '--Switch-trackBackground': isActive ? '#15144E' : '#EEEEEE',
-          width: '100%',
-          '& .MuiSwitch-track': {
-            backgroundColor: isActive ? '#15144E' : '#EEEEEE',
-          },
-          '& .MuiSwitch-thumb': {
-            backgroundColor: isActive ? '#EEEEEE' : '#15144E',
-          },
-          '@media (max-width: 600px)': {
-            '--Switch-trackHeight': '30px',
-            '--Switch-thumbSize': '50%',
-          },
-        }}
-      />
-    </Stack>
+    <div className="flex justify-center  items-center w-full  mx-auto">
+      <button
+        onClick={() => setIsActive(!isActive)}
+        className={`relative flex items-center justify-around h-8 w-32 rounded-full transition-all duration-300 ${
+          isActive ? "bg-[#15144E] text-white" : "bg-[#EEEEEE]"
+        } `}
+      >
+        <span
+          className={`text-sm transition-colors duration-300 
+          }`}
+        >
+          Inactive
+        </span>
+        <span
+          className={`text-sm transition-colors duration-300 
+          `}
+        >
+          Active
+        </span>
+
+        {/* Thumb */}
+        <div
+          className={`
+            absolute w-1/2 rounded-full  flex items-center justify-center text-sm transition-all  duration-300  cursor-pointer 
+            ${
+              isActive
+                ? "left-0 top-1 bottom-1  ml-1 bg-[#EEEEEE] text-[#15144E] transition "
+                : "left-1/2   bg-[#15144E] text-[#EEEEEE] h-full transition"
+            }
+          `}
+        >
+          {isActive ? "Inactive" : "Active"}
+        </div>
+      </button>
+    </div>
   );
 }

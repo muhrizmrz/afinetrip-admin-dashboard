@@ -102,7 +102,9 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
       <div className="absolute top-4 right-8 flex items-center gap-2 z-10">
         <button
           className={`text-3xl border border-[#E2E2E2] rounded-md p-1 ${
-            startIndex === 0 ? "text-gray-300 cursor-not-allowed" : "text-[#15144E]"
+            startIndex === 0
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-[#15144E]"
           }`}
           onClick={handlePrev}
           disabled={startIndex === 0}
@@ -111,7 +113,9 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
         </button>
         <button
           className={`text-3xl border border-[#E2E2E2] rounded-md p-1 ${
-            startIndex + faresToShow >= fares.length ? "text-gray-300 cursor-not-allowed" : "text-[#15144E]"
+            startIndex + faresToShow >= fares.length
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-[#15144E]"
           }`}
           onClick={handleNext}
           disabled={startIndex + faresToShow >= fares.length}
@@ -123,12 +127,23 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
       <div className="flex py-5 mt-6">
         {/* Fixed Services Column */}
         <div className="pr-4">
-          <h3 className="font-semibold text-[#15144E] mb-4 text-lg">Services</h3>
+          <h3 className="font-semibold text-[#15144E] mb-4 text-lg">
+            Services
+          </h3>
           <ul className="space-y-4">
             {services.map((item, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-[#15144E] border-b border-b-[#EAEAEA] pb-2">
-                <img src={item.icon} alt={item.text} className="w-5 h-5 object-contain mt-1" />
-                <span className="text-base font-medium whitespace-pre-line">{item.text}</span>
+              <li
+                key={i}
+                className="flex items-start gap-3 text-sm text-[#15144E] border-b border-b-[#EAEAEA] pb-2"
+              >
+                <img
+                  src={item.icon}
+                  alt={item.text}
+                  className="w-5 h-5 object-contain mt-1"
+                />
+                <span className="text-base font-medium whitespace-pre-line">
+                  {item.text}
+                </span>
               </li>
             ))}
           </ul>
@@ -138,13 +153,13 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
         <div className="w-3/4 overflow-hidden ">
           <div
             className="flex transition-transform duration-300 ease-in-out"
-            style={{ transform: `translateX(-${startIndex * (100 / faresToShow)}%)` }}
+            style={{
+              transform: `translateX(-${startIndex * (100 / faresToShow)}%)`,
+            }}
             ref={sliderRef}
           >
             {fares.map((fare) => (
-              <div
-                key={fare.id}
-                className=" px-2 flex-shrink-0">
+              <div key={fare.id} className=" px-2 flex-shrink-0">
                 <div
                   className={`bg-white border border-[#E2E2E2] rounded-xl p-5 flex flex-col justify-between h-full ${
                     selectedFare === fare.id ? "border-[#15144E]" : ""
@@ -159,7 +174,9 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
                         onChange={() => setSelectedFare(fare.id)}
                         className="accent-[#15144E]"
                       />
-                      <h4 className="font-semibold text-[#15144E] text-base">{fare.title}</h4>
+                      <h4 className="font-semibold text-[#15144E] text-base">
+                        {fare.title}
+                      </h4>
                     </div>
 
                     <p className="text-center text-lg font-semibold border-b border-b-[#EAEAEA] text-[#15144E] mb-4">
@@ -167,12 +184,24 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
                     </p>
 
                     <div className="space-y-2 text-sm text-[#15144E]">
-                      <p className="whitespace-pre-line border-b border-b-[#EAEAEA] pb-1">{fare.cancellation}</p>
-                      <p className="border-b border-b-[#EAEAEA] pb-1">{fare.dateChange}</p>
-                      <p className="whitespace-pre-line border-b border-b-[#EAEAEA] pb-1">{fare.seat}</p>
-                      <p className="border-b border-b-[#EAEAEA] pb-1">{fare.checkedBag}</p>
-                      <p className="border-b border-b-[#EAEAEA] pb-1">{fare.handBag}</p>
-                      <p className="border-b border-b-[#EAEAEA] pb-1">{fare.meal}</p>
+                      <p className="whitespace-pre-line border-b border-b-[#EAEAEA] pb-1">
+                        {fare.cancellation}
+                      </p>
+                      <p className="border-b border-b-[#EAEAEA] pb-1">
+                        {fare.dateChange}
+                      </p>
+                      <p className="whitespace-pre-line border-b border-b-[#EAEAEA] pb-1">
+                        {fare.seat}
+                      </p>
+                      <p className="border-b border-b-[#EAEAEA] pb-1">
+                        {fare.checkedBag}
+                      </p>
+                      <p className="border-b border-b-[#EAEAEA] pb-1">
+                        {fare.handBag}
+                      </p>
+                      <p className="border-b border-b-[#EAEAEA] pb-1">
+                        {fare.meal}
+                      </p>
                     </div>
                   </div>
 
@@ -188,14 +217,17 @@ const FareSlider = ({ selectedFlight, closeFareDetails }) => {
 
       <div className="w-full flex justify-between text-sm">
         <div className="flex items-center mt-auto">
-          <IoIosInformationCircle className="text-[#E5BC3B] h-5 w-5" />
+          <IoIosInformationCircle className="text-[#15144E] h-5 w-5" />
           <p className="text-[#15144E] text-xs ms-2">
-            Transit Visa is mandatory requirement if there are via TWO Schengen countries or TWO stop in same countries
+            Transit Visa is mandatory requirement if there are via TWO Schengen
+            countries or TWO stop in same countries
           </p>
         </div>
 
         <div className="flex flex-col items-center text-[#15144E] gap-2">
-          <p className="text-lg font-semibold">{selectedFareObject?.price || "₹ 25,996"}</p>
+          <p className="text-lg font-semibold">
+            {selectedFareObject?.price || "₹ 25,996"}
+          </p>
           <button className="border border-[#15144E] text-[#15144E] text-sm px-4 py-2 rounded-md">
             Book Now
           </button>

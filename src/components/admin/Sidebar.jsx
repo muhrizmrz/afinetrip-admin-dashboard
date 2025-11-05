@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Tooltip, Zoom } from "@mui/material";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-
-const menuItems = [
-  { name: 'Dashboard', image: '/images/dashboard.svg' },
-  { name: 'Users & Partners', image: '/images/agent_management.svg' },
-  { name: 'Inventory Hub', image: '/images/airport_management.svg' },
-  { name: 'Integrations', image: '/images/api_management.svg' },
-  { name: 'Finance & Payments', image: '/images/flight_management.svg' },
-  { name: 'Content Management', image: '/images/hotel_management.svg' },
-  { name: 'Marketing & Support', image: '/images/blog_management.svg' },
-  { name: 'System Settings', image: '/images/currency_management.svg' },
-];
+import { Link, useLocation } from "react-router-dom";
+import { sideBarMenuItems } from "./MenuItems";
 
 export default function Sidebar() {
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState(null);
 
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
       if (window.innerWidth <= 768) {
+        setIsMobile(true);
         setIsExpanded(false);
+      } else {
+        setIsMobile(false);
+        setIsExpanded(true);
       }
     };
 
@@ -33,126 +27,149 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const toggleExpand = () => {
-    setIsExpanded((prev) => !prev);
+  const toggleSubMenu = (menuName) => {
+    setOpenSubMenu(openSubMenu === menuName ? null : menuName);
   };
 
-  const menuItemClasses = (isActive) => `w-full flex items-center gap-1 text-left mb-6 transition duration-500
-    ${isActive ? "text-[#E5BC3B] text-sm" : " text-[#15144E] text-xs"}
-    ${isMobile && !isExpanded ? "justify-center px-2" : "justify-start"} `;
+  const getActiveItem = () => {
+    for (const item of sideBarMenuItems) {
+      if (item.link == location.pathname) return item.name;
+      if (item.subItems) {
+        const sub = item.subItems.find((s) => s.link == location.pathname);
+        if (sub) return sub.name;
+      }
+    }
+    return "Dashboard";
+  };
 
-  const iconClasses = (isActive) => 
-    `object-contain transition duration-500 ${isActive ? "w-6 h-6" : "w-5 h-5"}`;
+  const activeItem = getActiveItem();
 
-  const sidebarWidth = isMobile
-    ? isExpanded
-      ? "w-64"
-      : "w-16"
-    : "w-64";
+  // keep submenu opened
+  // useEffect(() => {
+  //   const parentWithActiveSub = menuItems.find((item) =>
+  //     item.subItems?.some((sub) => sub.link === location.pathname)
+  //   );
+  //   if (parentWithActiveSub) setOpenSubMenu(parentWithActiveSub.name);
+  // }, [location.pathname]);
 
+  const menuItemClasses = (isActive) =>
+    `w-full flex items-center text-[#15144E]
+       transition duration-200 ${
+         isActive ? " font-semibold" : "text-gray-600"
+       } hover:text-[#2a2965]`;
+
+  const iconClasses = (isActive) =>
+    `object-contain transition duration-500 ${
+      isActive ? "w-6 h-6" : "w-5 h-5"
+    }`;
+  const sidebarWidth = isMobile ? (isExpanded ? "w-64" : "w-16") : "w-64";
   return (
-    <nav className={` absolute rounded-xl md:rounded-none p-2 md:p-0 shadow-xl md:shadow-none transition duration-500 ${sidebarWidth} flex flex-col relative`}>
-
- {/* Mobile Expand/Collapse Toggle Button */}
+    <nav
+      className={`relative transition-all duration-500 flex flex-col h-full ${sidebarWidth}`}
+    >
+      {/* Mobile Expand/Collapse Toggle */}
       {isMobile && (
         <button
-          onClick={toggleExpand}
-          className="absolute top-4 -right-3  bg-[#15144E] rounded-full shadow-md p-1 z-10 "
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="absolute top-1 right-2 bg-[#15144E] rounded-full shadow-md p-1 z-20"
           aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
         >
           {isExpanded ? (
-            <MdKeyboardArrowLeft className="w-5 h-5 text-[#fff]" />
+            <MdKeyboardArrowLeft className="w-5 h-5 text-white" />
           ) : (
-            <MdKeyboardArrowRight className="w-5 h-5 text-[#fff]" />
+            <MdKeyboardArrowRight className="w-5 h-5 text-white" />
           )}
         </button>
       )}
 
-      <ul className="space-y-2 flex-1">
-        {menuItems.map((item, index) => {
-          const isActive = activeItem === item.name;
+      <ul className="flex-1">
+        {sideBarMenuItems.map((item, index) => {
+          const isItemActive = activeItem === item.name;
+          const isSubmenuOpen = openSubMenu === item.name;
 
           return (
-            <li key={index}>
-              <Tooltip
-                title={isMobile && !isExpanded ? item.name : ""}
-                placement="right"
-                open={isMobile && !isExpanded && Boolean(activeItem === item.name)}
-                TransitionComponent={Zoom}
-                TransitionProps={{ timeout: 200 }}
-                PopperProps={{
-                  sx: {
-                    '& .MuiTooltip-tooltip': {
-                      backgroundColor: '#15144E',
-                      color: 'white',
-                      fontSize: '0.875rem',
-                      padding: '6px 10px',
-                      borderRadius: '6px',
-                    },
-                  },
-                }}
-                disableHoverListener={!isMobile || isExpanded}>
-                <button
-  aria-label={item.name}
-  onClick={() => setActiveItem(item.name)}
-  className={`${menuItemClasses(isActive)} flex items-center justify-between w-full gap-2`}
->
-  {/* Left side: icon + label */}
-  <div className="flex items-center gap-2">
-    <img
-      src={item.image}
-      alt={item.name}
-      className={`${iconClasses(isActive)} w-5 h-5 object-contain`}
-    />
-    {(isMobile && isExpanded) || !isMobile ? (
-      <span
-        className={`transition duration-500 overflow-hidden whitespace-nowrap ${
-          isMobile && !isExpanded
-            ? "w-0 opacity-0"
-            : "w-auto opacity-100 ml-1"
-        }`}
-      >
-        {item.name}
-      </span>
-    ) : null}
-  </div>
+            <li key={index} className="relative group">
+              {/* Main Item */}
+              <div
+                onClick={() =>
+                  item.subItems ? toggleSubMenu(item.name) : null
+                }
+                className={`cursor-pointer flex items-center ${menuItemClasses(
+                  isItemActive
+                )} ${isSubmenuOpen && item.subItems ? "mb-3" : "mb-5"}`}
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className={`${iconClasses(isItemActive)} object-contain`}
+                />
 
-  {/* Right side: arrow (vertically centered, same line) */}
-  {(isMobile && isExpanded) || !isMobile ? (
-    <IoIosArrowDown className="text-[#15144E] text-base flex-shrink-0" />
-  ) : null}
-</button>
+                {isExpanded || !isMobile ? (
+                  item.subItems ? (
+                    <span className="ml-1 flex items-center justify-between w-full ">
+                      <span>{item.name}</span>
+                      <IoIosArrowDown
+                        className={`transition-transform duration-300 ${
+                          isSubmenuOpen ? "rotate-180" : ""
+                        } text-[#15144E]`}
+                      />
+                    </span>
+                  ) : (
+                    <Link
+                      to={item.link}
+                      className={`transition duration-500 overflow-hidden whitespace-nowrap ml-1 ${
+                        isMobile && !isExpanded
+                          ? "w-0 opacity-0"
+                          : "w-auto opacity-100"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                ) : null}
+              </div>
 
-
-              </Tooltip>
+              {/* Submenu */}
+              {item.subItems && (
+                <ul
+                  className={`ml-10 overflow-hidden transition-all duration-300  ${
+                    isSubmenuOpen && isExpanded
+                      ? "max-h-40 opacity-100 mb-3"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  {item.subItems.map((sub, subIndex) => {
+                    const isSubActive = location.pathname === sub.link;
+                    return (
+                      <li key={subIndex}>
+                        <Link
+                          to={sub.link}
+                          className={` py-1 text-sm flex gap-1 items-end mb-1 ${
+                            isSubActive
+                              ? "text-[#15144E] font-semibold"
+                              : "text-gray-600 hover:text-[#2a2965]"
+                          }`}
+                        >
+                          {sub.image && (
+                            <img
+                              src={sub.image}
+                              alt={sub.name}
+                              className={`${iconClasses(
+                                isItemActive
+                              )} object-contain`}
+                            />
+                          )}
+                          {sub.name}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </li>
           );
         })}
       </ul>
-
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        @keyframes slideOutRight {
-          from {
-            opacity: 1;
-            transform: translateX(0);
-          }
-          to {
-            opacity: 0;
-            transform: translateX(-10px);
-          }
-        }
-      `}</style>
     </nav>
   );
 }

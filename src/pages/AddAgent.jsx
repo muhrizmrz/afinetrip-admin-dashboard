@@ -1,10 +1,10 @@
 import Header from "../components/admin/AdminLayout/Header";
 import Footer from "../components/Layout/Footer";
-import AgentListTable from "../components/admin/AgentListTable";
+import AddAgentForm from "../components/admin/AddAgentForm";
 import Sidebar from "../components/admin/Sidebar";
 import footerImage from "/images/footer_image.svg";
 
-function AgentList() {
+function AddAgent() {
   return (
     <div className="flex flex-col min-h-screen gradient-bg overflow-x-hidden">
       <Header />
@@ -13,7 +13,7 @@ function AgentList() {
         <Sidebar />
 
         <div className="flex-1 w-full overflow-x-hidden">
-          <AgentListTable />
+          <AddAgentForm />
         </div>
       </div>
 
@@ -26,4 +26,4 @@ function AgentList() {
   );
 }
 
-export default AgentList;
+export default AddAgent;
