@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaLock, FaEnvelope } from "react-icons/fa";
+import Button from "../utility/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -61,12 +62,12 @@ export default function Login() {
 
             
 
-            <button
+            <Button
               type="submit"
-              className="text-white bg-[#15144E] p-2 cursor-pointer rounded-lg hover:bg-[#2a2965]"
+              variant="primary"
             >
               Login
-            </button>
+            </Button>
           </form>
         </div>
       </div>

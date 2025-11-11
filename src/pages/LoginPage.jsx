@@ -4,7 +4,6 @@ import footerImage from "/images/footer_image.svg";
 export default function LoginPage() {
   return (
     <div className="flex flex-col justify-between items-center min-h-screen w-full overflow-hidden gradient-bg px-4 pt-8">
-      {/* Login Component */}
       <div className="w-full max-w-md">
         <Login />
       </div>

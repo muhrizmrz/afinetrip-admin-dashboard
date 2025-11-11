@@ -1,11 +1,9 @@
-import CustomPagination from "../admin/CustomPagination";
-import { PiSlidersHorizontalFill } from "react-icons/pi";
-import { CiExport } from "react-icons/ci";
+import CustomPagination from "../utility/CustomPagination";
 import ExampleTrackChild from "./ExampleTrackChild";
-import { IoIosArrowDown } from "react-icons/io";
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
 import { useState } from "react";
-import { SupplierListTableHeader } from "./MenuItems";
+import { SupplierListTableHeader } from "../utility/MenuItems";
+import Button from "../utility/Button";
 
 //sample data
 const rows = [
@@ -100,9 +98,7 @@ export default function DataTable() {
                   </td>
                   <td className="p-3 text-gray-500">{row.index}</td>
                   <td className="px-3  py-3 text-sm  ">
-                    <button className="bg-[#15144e] text-white rounded px-3 py-1">
-                      Balance
-                    </button>
+                    <Button variant="primary">Balance</Button>
                   </td>
                 </tr>
               ))}

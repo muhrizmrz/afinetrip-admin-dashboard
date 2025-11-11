@@ -1,8 +1,8 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import CustomPagination from "../admin/CustomPagination";
+import CustomPagination from "../utility/CustomPagination";
 import { useState } from "react";
-import { hotelBookTableHeader } from "./MenuItems";
-import { FaStar } from 'react-icons/fa';
+import { hotelBookTableHeader } from "../utility/MenuItems";
+import { FaStar } from "react-icons/fa";
 
 const rows = [
   {
@@ -33,7 +33,7 @@ const rows = [
     amenities: "WiFi, breakfast",
     review: "4.5",
     distance: "12 km",
-    status: "cancel",
+    status: "Cancelled",
   },
   {
     name: "Hotel Bristol",
@@ -53,7 +53,7 @@ const rows = [
     amenities: "WiFi, breakfast",
     review: "4.5",
     distance: "12 km",
-    status: "cancel",
+    status: "Cancelled",
   },
   {
     name: "Fairmont Banff Springs",
@@ -142,12 +142,16 @@ export default function DataTable() {
                     <td className="p-2">
                       <div className="flex justify-center align-center">
                         {row.rating}
-                        <FaStar  className="text-[gold] ml-1" />
+                        <FaStar className="text-[gold] ml-1" />
                       </div>
                     </td>
                     <td className="p-2">{row.location}</td>
-                    <td className="p-2"><div className="flex gap-2 justify-center items-center">
-                      {"\u20B9"}{row.price}</div></td>
+                    <td className="p-2">
+                      <div className="flex gap-2 justify-center items-center">
+                        {"\u20B9"}
+                        {row.price}
+                      </div>
+                    </td>
                     <td className="p-2">{row.amenities}</td>
                     <td className="p-2">{row.review}</td>
                     <td className="p-2">{row.distance}</td>

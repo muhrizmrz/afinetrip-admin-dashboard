@@ -1,11 +1,12 @@
-import CustomPagination from "../admin/CustomPagination";
+import CustomPagination from "../utility/CustomPagination";
 import { PiSlidersHorizontalFill } from "react-icons/pi";
 import { CiExport } from "react-icons/ci";
 import ExampleTrackChild from "./ExampleTrackChild";
 import { IoIosArrowDown } from "react-icons/io";
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
 import { useState } from "react";
-import { agentListTableHeader } from "./MenuItems";
+import { agentListTableHeader } from "../utility/MenuItems";
+import Button from "../utility/Button";
 
 //sample data
 const rows = [
@@ -74,28 +75,28 @@ export default function DataTable() {
       <h1 className="text-xl font-semibold text-[#15144E] mb-6">Agent List</h1>
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full md:w-1/2">
-          <button className="flex items-center justify-between bg-white px-4 py-3 text-[#15144E] rounded-lg shadow-sm">
+          <div className="flex items-center justify-between bg-white px-4 py-3 text-[#15144E] rounded-lg shadow-sm">
             <span className="text-md font-normal">Active</span>
             <span className="text-[#15144e] text-lg font-bold">8</span>
-          </button>
-          <button className="flex items-center justify-between px-4 py-3 bg-white text-[#15144E] rounded-lg shadow-sm">
+          </div>
+          <div className="flex items-center justify-between px-4 py-3 bg-white text-[#15144E] rounded-lg shadow-sm">
             <span className="text-md font-normal">In Active</span>
             <span className="text-[#15144e] text-lg font-bold">53</span>
-          </button>
-          <button className="flex items-center justify-between bg-white px-4 py-3 text-[#15144E] rounded-lg shadow-sm">
+          </div>
+          <div className="flex items-center justify-between bg-white px-4 py-3 text-[#15144E] rounded-lg shadow-sm">
             <span className="text-md font-normal">Balance</span>
             <span className="text-[#15144e] text-lg font-bold">0</span>
-          </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-8">
-          <button className="flex items-center justify-center gap-2 px-4 py-2 bg-[#15144E] text-[#fff] rounded-lg">
+          <Button className="flex items-center justify-center gap-2" variant="primary">
             <PiSlidersHorizontalFill size={18} />
             <span className="text-sm font-medium">Filter</span>
-          </button>
+          </Button>
 
-          <button className="flex items-center justify-center gap-2 bg-transparent border border-[#15144E] px-4 py-2 text-[#15144E] rounded-lg">
+          <Button className="flex items-center justify-center gap-2 " variant="outline">
             <span className="text-sm font-medium">Clear Filter</span>
-          </button>
+          </Button>
           <div>
             <button className="flex items-center justify-center py-2 text-[#15144E] rounded-lg">
               <a href="" className="flex items-center gap-1">
@@ -155,14 +156,14 @@ export default function DataTable() {
                   </td>
                   <td className="px-3  py-3 text-sm text-right text-[#15144e]">
                     <div className="flex gap-[10px] align-center w-full justify-center">
-                      <button className="flex items-center gap-1 rounded-md text-xs bg-[#15144E] text-white  border border-[#15144E] p-1.5 cursor-pointer">
+                      <Button className="flex items-center gap-1 " variant="primary">
                         Action
                         <IoIosArrowDown className="text-[#fff]" />
-                      </button>
-                      <button className="flex items-center gap-1 rounded-md text-xs bg-white text-[#15144E] border border-[#15144E] p-1.5 cursor-pointer">
+                      </Button>
+                      <Button className="flex items-center gap-1 rounded-md text-xs" variant="outline">
                         Finance
                         <IoIosArrowDown className="text-[#15144E] " />
-                      </button>{" "}
+                      </Button>{" "}
                     </div>
                   </td>
                 </tr>

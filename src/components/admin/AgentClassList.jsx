@@ -1,7 +1,6 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
 import { MdDelete } from "react-icons/md";
-import { agentClassListHeader } from "./MenuItems";
-
+import { agentClassListHeader } from "../utility/MenuItems";
 
 // Dummy Data
 const rows = [

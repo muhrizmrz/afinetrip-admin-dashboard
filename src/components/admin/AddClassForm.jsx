@@ -1,4 +1,5 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
+import Button from "../utility/Button";
 
 export default function AddClassForm() {
   return (
@@ -11,7 +12,7 @@ export default function AddClassForm() {
         <form>
           <div className="flex gap-4 mb-4">
             <div className="w-full flex flex-col">
-               <label className='mb-2 text-[#15144e]'>Class Name *</label>
+              <label className="mb-2 text-[#15144e]">Class Name *</label>
 
               <input
                 type="text"
@@ -20,7 +21,7 @@ export default function AddClassForm() {
               />
             </div>
             <div className="w-full flex flex-col">
-               <label className='mb-2 text-[#15144e]'>Class Detail</label>
+              <label className="mb-2 text-[#15144e]">Class Detail</label>
               <input
                 type="text"
                 placeholder="Enter Detail"
@@ -28,12 +29,12 @@ export default function AddClassForm() {
               />
             </div>
           </div>
-          <button
+          <Button
             type="submit"
-            className="bg-[#15144e] text-white rounded p-1.5"
+            variant="primary"
           >
             Update
-          </button>
+          </Button>
         </form>
       </div>
     </div>

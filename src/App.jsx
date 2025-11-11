@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FlightResultPage from "./pages/FlightResultPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AgentList from "./pages/AgentList";
 import AddAgent from "./pages/AddAgent";
@@ -15,12 +14,11 @@ import AddBlogFormPage from "./pages/AddBlogPage";
 import AddNewCustomerFormPage from "./pages/AddNewCustomerPage";
 import SystemSettingsPage from "./pages/SystemSettingsPage";
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<FlightResultPage />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/" element={<AdminDashboard />} />
         <Route path="/agentlist" element={<AgentList />} />
         <Route path="/addagent" element={<AddAgent />} />
         <Route path="/addclass" element={<AddClass />} />
@@ -38,5 +36,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
 import ImageUpload from "../utility/ImageUpload";
+import Button from "../utility/Button";
 
 export default function AddBlogCategoryForm() {
   const [fileName, setFileName] = useState("");
@@ -87,12 +88,12 @@ export default function AddBlogCategoryForm() {
             />
           </div>
           <div className="flex w-full justify-end">
-            <button
+            <Button
               type="submit"
-              className="bg-[#15144e] text-white rounded px-4 py-2 "
+              variant="primary"
             >
               Update
-            </button>
+            </Button>
           </div>
         </form>
       </div>

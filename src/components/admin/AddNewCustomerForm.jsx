@@ -1,4 +1,5 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
+import Button from "../utility/Button";
 
 export default function AddNewCustomerForm() {
   return (
@@ -133,19 +134,19 @@ export default function AddNewCustomerForm() {
               />
             </div>
           </div>
-          <div class='flex gap-2'>
-            <button
+          <div class="flex gap-2">
+            <Button
               type="submit"
-              className="bg-[#15144e] text-white rounded p-1.5"
+              variant="primary"
             >
               Register
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="bg-[#15144e] text-white rounded p-1.5"
+              variant="secondary"
             >
               Reset
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { BsGlobe2 } from "react-icons/bs";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import { FaCircleInfo } from "react-icons/fa6";
 import ImageUpload from "../utility/ImageUpload";
+import Button from "../utility/Button";
 
 export default function SystemSettings() {
   const today = new Date();
@@ -179,9 +180,9 @@ export default function SystemSettings() {
               </span>
             </div>
             <div className="flex justify-end">
-              <button className="rounded px-3 py-2 bg-[#15144E] text-white">
+              <Button variant="primary">
                 Update
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -207,9 +208,9 @@ export default function SystemSettings() {
               </span>
             </div>
             <div className="flex justify-end">
-              <button className="rounded px-3 py-2 bg-[#15144E] text-white">
+              <Button variant="primary">
                 Update
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -259,12 +260,12 @@ export default function SystemSettings() {
           </div>
 
           <div className="flex justify-end">
-            <button
+            <Button
               type="submit"
-              className="bg-[#15144e] text-white rounded p-1.5"
+              variant="primary"
             >
               Change
-            </button>
+            </Button>
           </div>
         </form>
       </div>

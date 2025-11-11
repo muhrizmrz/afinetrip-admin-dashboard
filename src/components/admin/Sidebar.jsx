@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
-import { sideBarMenuItems } from "./MenuItems";
+import { sideBarMenuItems } from "../utility/MenuItems";
 
 export default function Sidebar() {
   const location = useLocation();
@@ -106,14 +106,14 @@ export default function Sidebar() {
 
                 {isExpanded || !isMobile ? (
                   item.subItems ? (
-                    <span className="ml-1 flex items-center justify-between w-full ">
-                      <span>{item.name}</span>
+                    <div className="ml-1 flex items-center w-full ">
+                      <span className="w-full">{item.name}</span>
                       <IoIosArrowDown
                         className={`transition-transform duration-300 ${
                           isSubmenuOpen ? "rotate-180" : ""
                         } text-[#15144E]`}
                       />
-                    </span>
+                    </div>
                   ) : (
                     <Link
                       to={item.link}

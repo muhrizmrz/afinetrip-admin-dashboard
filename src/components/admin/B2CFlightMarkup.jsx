@@ -1,4 +1,5 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../utility/Breadcrumbs";
+import Button from "../utility/Button";
 
 export default function B2CFlightMarkup() {
   return (
@@ -46,12 +47,9 @@ export default function B2CFlightMarkup() {
               </div>
             </div>
           </div>
-          <button
-            type="submit"
-            className="bg-[#15144e] text-white rounded p-1.5"
-          >
+          <Button type="submit" variant="primary">
             Update
-          </button>
+          </Button>
         </form>
       </div>
     </div>

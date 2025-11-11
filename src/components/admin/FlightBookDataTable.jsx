@@ -1,7 +1,7 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import CustomPagination from "../admin/CustomPagination";
+import CustomPagination from "../utility/CustomPagination";
 import { useState } from "react";
-import { flightBookTableHeader } from "./MenuItems";
+import { flightBookTableHeader } from "../utility/MenuItems";
 
 const rows = [
   {
@@ -119,8 +119,7 @@ export default function DataTable() {
                     {col.headerName}
                   </th>
                 ))}
-                <th className="px-3 py-3 text-md font-semibold text-[#15144e]">
-                </th>
+                <th className="px-3 py-3 text-md font-semibold text-[#15144e]"></th>
               </tr>
             </thead>
 
