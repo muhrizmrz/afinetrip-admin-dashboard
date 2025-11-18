@@ -6,7 +6,7 @@ export const sideBarMenuItems = [
     subItems: [
       {
         name: "Add Agent",
-        image: "/images/add-user-svgrepo-com.svg",
+        // image: "/images/add-user-svgrepo-com.svg",
         link: "/addagent",
       },
       { name: "Add Class", image: "", link: "/addclass" },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import data from "../utility/countries_states_cities_min.json";
 
-export default function LocationSelector() {
+export default function LocationSelector({onChange}) {
   const [countries] = useState(data);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -16,6 +16,20 @@ export default function LocationSelector() {
   const handleStateChange = (e) => {
     setSelectedState(e.target.value);
     setSelectedCity("");
+    onChange({
+      country: selectedCountry,
+      state: e.target.value,
+      city: selectedCity,
+    });
+  };
+
+  const handleCityChange = (value) => {
+    setSelectedCity(value);
+    onChange({
+      country: selectedCountry,
+      state: selectedState,
+      city: value,
+    });
   };
 
   const selectedCountryObj = countries.find((c) => c.name === selectedCountry);
@@ -53,7 +67,7 @@ export default function LocationSelector() {
       </select>
       <select
         value={selectedCity}
-        onChange={(e) => setSelectedCity(e.target.value)}
+        onChange={(e) => handleCityChange(e.target.value)}
         disabled={!selectedState}
         className="rounded border outline-none cursor-pointer border-[#d0d0d0] py-1 px-2 w-full h-full"
       >

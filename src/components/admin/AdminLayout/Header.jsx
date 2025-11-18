@@ -4,6 +4,8 @@ import logo from "/images/logo.svg";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
+import { useAuth } from "../../../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   // Desktop states
@@ -14,6 +16,19 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileQuickOpen, setMobileQuickOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   // === Hover logic for desktop ===
   const handleMouseEnter = (menu) => {
@@ -103,7 +118,7 @@ export default function Header() {
                 onMouseLeave={handleMouseLeave}
               >
                 <ul className="py-2 text-sm">
-                  {["Profile", "Account Settings", "Logout"].map((item) => (
+                  {["Profile", "Account Settings"].map((item) => (
                     <li
                       key={item}
                       className="px-4 py-2 cursor-pointer hover:bg-gray-100"
@@ -111,6 +126,13 @@ export default function Header() {
                       {item}
                     </li>
                   ))}
+                  <li
+                    key={"Logout"}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </li>
                 </ul>
               </div>
             )}
@@ -138,9 +160,8 @@ export default function Header() {
               >
                 <span>Quick Links</span>
                 <IoIosArrowDown
-                  className={`w-4 h-4 transform transition-transform ${
-                    mobileQuickOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`w-4 h-4 transform transition-transform ${mobileQuickOpen ? "rotate-180" : "rotate-0"
+                    }`}
                 />
               </div>
               {mobileQuickOpen && (
@@ -171,18 +192,24 @@ export default function Header() {
               >
                 <span>Admin</span>
                 <IoIosArrowDown
-                  className={`w-4 h-4 transform transition-transform ${
-                    profileOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`w-4 h-4 transform transition-transform ${profileOpen ? "rotate-180" : "rotate-0"
+                    }`}
                 />
               </div>
               {profileOpen && (
                 <ul className="mt-2 ml-2 space-y-2 text-sm">
-                  {["Profile", "Account Settings", "Logout"].map((item) => (
+                  {["Profile", "Account Settings"].map((item) => (
                     <li key={item} className="cursor-pointer">
                       {item}
                     </li>
                   ))}
+                  <li
+                    key={"Logout"}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </li>
                 </ul>
               )}
             </div>

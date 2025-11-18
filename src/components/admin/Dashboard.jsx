@@ -24,7 +24,7 @@ function Dashboard() {
         Dashboard
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <button className="flex items-center justify-center gap-2 px-3 py-4 bg-[#EDF7FF] text-[#15144E] rounded-lg">
+        <button className="flex cursor-pointer items-center justify-center gap-2 px-3 py-4 bg-[#EDF7FF] text-[#15144E] rounded-lg">
           <img
             src={security}
             alt="Security Management"
@@ -35,7 +35,7 @@ function Dashboard() {
           </span>
         </button>
 
-        <button className="flex items-center justify-center gap-2 px-3 py-4 bg-[#F6FFF3] text-[#15144E] rounded-lg">
+        <button className="flex cursor-pointer items-center justify-center gap-2 px-3 py-4 bg-[#F6FFF3] text-[#15144E] rounded-lg">
           <img
             src={b2bflight}
             alt="Security Management"
@@ -46,7 +46,7 @@ function Dashboard() {
           </span>
         </button>
 
-        <button className="flex items-center justify-center gap-2 px-3 py-4 bg-[#FAFFE6] text-[#15144E] rounded-lg">
+        <button className="flex cursor-pointer items-center justify-center gap-2 px-3 py-4 bg-[#FAFFE6] text-[#15144E] rounded-lg">
           <img
             src={b2b_hotel}
             alt="B2B Hotel Management"
@@ -57,7 +57,7 @@ function Dashboard() {
           </span>
         </button>
 
-        <button className="flex items-center justify-center gap-2 px-3 py-4 bg-[#F8F2FF] text-[#15144E] rounded-lg">
+        <button className="flex cursor-pointer items-center justify-center gap-2 px-3 py-4 bg-[#F8F2FF] text-[#15144E] rounded-lg">
           <img
             src={coupon}
             alt="Coupon Management"

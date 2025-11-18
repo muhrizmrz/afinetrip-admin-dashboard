@@ -4,9 +4,10 @@ import { CiExport } from "react-icons/ci";
 import ExampleTrackChild from "./ExampleTrackChild";
 import { IoIosArrowDown } from "react-icons/io";
 import Breadcrumbs from "../utility/Breadcrumbs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { agentListTableHeader } from "../utility/MenuItems";
 import Button from "../utility/Button";
+import { getAgents } from "../../services/agentService";
 
 //sample data
 const rows = [
@@ -68,6 +69,14 @@ export default function DataTable() {
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = rows.slice(indexOfFirstRow, indexOfLastRow);
   const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      const data = await getAgents();
+      console.log(data);
+    }
+    fetchAgents();
+  }, []);
 
   return (
     <div>

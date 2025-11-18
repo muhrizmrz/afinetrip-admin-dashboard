@@ -1,184 +1,292 @@
 import Breadcrumbs from "../utility/Breadcrumbs";
 import { Link } from "react-router-dom";
 import { PiBuildingsFill } from "react-icons/pi";
-import {
-  FaArrowRight,
-  FaCalculator,
-  FaFileUpload,
-  FaEnvelope,
-} from "react-icons/fa";
+import { FaArrowRight, FaEnvelope } from "react-icons/fa";
 import { useState, useRef } from "react";
 import Button from "../utility/Button";
 import Input from "../utility/Input";
-import LocationSelector from "../utility/Address"
-
+import LocationSelector from "../utility/Address";
+import toast from "react-hot-toast";
+import { createAgent } from "../../services/authService";
 
 export default function AddAgentForm() {
   const fileInputRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [activeStep, setActiveStep] = useState(0);
 
-  const steps = [
-    { icon: <PiBuildingsFill />, label: "Company Information" },
-    // { icon: <FaCalculator />, label: "Tax Information" },
-    // { icon: <FaFileUpload />, label: "Upload Document" },
-    { icon: <FaEnvelope />, label: "Other Details" },
-  ];
+  const [activeStep, setActiveStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [serverErrors, setServerErrors] = useState({}); // errors from backend
+
+  // form state
+  const [form, setForm] = useState({
+    // user / credentials
+    name: "",
+    email: "",
+
+    // company basic
+    company_name: "",
+    mobile: "",
+    office_phone: "",
+    login_id: "",
+
+    // tax & contact
+    tax_no: "",
+    salutation: "Mr.",
+    contact_name: "",
+
+    // address
+    address_line1: "",
+    address_line2: "",
+    country_id: null,
+    state_id: null,
+    city_id: null,
+    postal_code: "",
+
+    // gst
+    // gst_number: "",
+    // gst_company_name: "",
+    // gst_company_email: "",
+    // gst_company_contact_number: "",
+    // gst_company_address: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // const steps = [
+  //   { icon: <PiBuildingsFill />, label: "Company Information" },
+  //   { icon: <FaEnvelope />, label: "Other Details" },
+  // ];
+
+  const setField = (field, value) => {
+    setForm((s) => ({ ...s, [field]: value }));
+    setErrors((e) => ({ ...e, [field]: undefined }));
+    setServerErrors({});
+  };
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const mobileRegex = /^(?:\+91|91|0)?[6789]\d{9}$/;
+
+  const validateStep0 = () => {
+    console.log(form);
+    const newErrors = {};
+    if (!form.company_name?.trim()) newErrors.company_name = "Company name is required";
+    if (!form.mobile?.trim()) newErrors.mobile = "Mobile is required";
+    else if (!mobileRegex.test(form.mobile.trim())) newErrors.mobile = "Invalid mobile number";
+    if (!form.email?.trim()) newErrors.email = "Email is required";
+    else if (!emailRegex.test(form.email.trim())) newErrors.email = "Invalid email";
+    if (!form.login_id?.trim()) newErrors.login_id = "Login ID is required";
+    // if (!form.login_pin?.trim()) newErrors.login_pin = "Login PIN is required";
+    // if (!form.password) newErrors.password = "Password is required";
+    // if (!form.password_confirmation) newErrors.password_confirmation = "Confirm the password";
+    // if (form.password && form.password_confirmation && form.password !== form.password_confirmation) {
+    //   newErrors.password_confirmation = "Passwords do not match";
+    // }
+    if (!form.contact_name?.trim()) newErrors.contact_name = "Contact name is required";
+    if (!form.address_line1?.trim()) newErrors.address_line1 = "Address line 1 is required";
+    if (!form.country_id) newErrors.country_id = "Country is required";
+    if (!form.state_id) newErrors.state_id = "State is required";
+    if (!form.city_id) newErrors.city_id = "City is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleLocationChange = (location) => {
+    setForm((s) => ({
+      ...s,
+      country_id: location.country ?? s.country_id,
+      state_id: location.state ?? s.state_id,
+      city_id: location.city ?? s.city_id,
+      // postal_code: location.postal_code ?? s.postal_code,
+    }));
+    setErrors((e) => ({ ...e, country_id: undefined, state_id: undefined, city_id: undefined }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateStep0()) {
+      return;
+    }
+
+    setLoading(true);
+    setServerErrors({});
+
+    try {
+      const payload = {
+        name: form.name || form.contact_name || form.company_name,
+        email: form.email,
+        company_name: form.company_name,
+        mobile: form.mobile,
+        office_phone: form.office_phone,
+        login_id: form.login_id,
+        tax_no: form.tax_no,
+        salutation: form.salutation,
+        contact_name: form.contact_name,
+
+        address_line1: form.address_line1,
+        address_line2: form.address_line2,
+        country: form.country_id,
+        state: form.state_id,
+        city: form.city_id,
+        postal_code: form.postal_code,
+
+        // gst_number: form.gst_number,
+        // gst_company_name: form.gst_company_name,
+        // gst_company_email: form.gst_company_email,
+        // gst_company_contact_number: form.gst_company_contact_number,
+        // gst_company_address: form.gst_company_address,
+      };
+
+      console.log(payload);
+
+      const data = await createAgent(payload);
+
+      console.log(data);
+      toast.success("Agent created successfully");
+      
+      // setForm({
+      //   name: "",
+      //   email: "",
+      //   // password: "",
+      //   // password_confirmation: "",
+      //   company_name: "",
+      //   mobile: "",
+      //   office_phone: "",
+      //   login_id: "",
+      //   // login_pin: "",
+      //   tax_no: "",
+      //   salutation: "Mr.",
+      //   contact_name: "",
+      //   address_line1: "",
+      //   address_line2: "",
+      //   country_id: null,
+      //   state_id: null,
+      //   city_id: null,
+      //   postal_code: "",
+      //   // gst_number: "",
+      //   // gst_company_name: "",
+      //   // gst_company_email: "",
+      //   // gst_company_contact_number: "",
+      //   // gst_company_address: "",
+      // });
+      // setActiveStep(0);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create agent");
+      alert("Unexpected error while creating agent");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+    // you can store and later upload the file in a multipart request
+    // setSelectedFile(file);
+    fileInputRef.current.value = null;
   };
 
-  const renderStepContent = () => {
-    switch (activeStep) {
-      case 0:
-        return (
-          <div>
-            <h4 className="font-semibold mb-4 text-[#15144e]">
-              Company Basic Information
-            </h4>
-            <form className="text-sm">
-              <div>
-                <div className="flex mb-6 gap-4">
-                  <Input
-                    label="Company Name *"
-                    placeholder="Enter Company Name"
-                  />
-                  <div className="w-full flex flex-col">
-                    <label className="mb-2 text-[#15144e]">Mobile *</label>
+  // const renderStepContent = () => {
+  //   switch (activeStep) {
+  //     case 1:
+  //       return (
+  //         <div>
+  //           <div>
+  //             <h4 className="font-semibold mb-4">Tax Information</h4>
+  //             <form className="text-sm" onSubmit={(e) => e.preventDefault()}>
+  //               <div className="flex mb-6 gap-4">
+  //                 <Input
+  //                   label="Tax No"
+  //                   placeholder="Enter Tax No"
+  //                   value={form.tax_no}
+  //                   onChange={(e) => setField("tax_no", e.target.value)}
+  //                 />
+  //               </div>
+  //             </form>
+  //           </div>
 
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      maxLength="13"
-                      placeholder="Enter Mobile"
-                      pattern="^(?:\+91|91|0)?[789]\d{9}$"
-                      className="rounded border border-[#d0d0d0] py-1 px-2 w-full outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="flex mb-6 gap-4">
-                  <div className="w-full flex flex-col">
-                    <label className="mb-2 text-[#15144e]">
-                      Office Phone Number
-                    </label>
+  //           <div>
+  //             <h4 className="font-semibold mb-4">Contact Information</h4>
+  //             <form className="text-sm" onSubmit={(e) => e.preventDefault()}>
+  //               <div className="flex mb-6 gap-4">
+  //                 <div className="w-full flex flex-col">
+  //                   <label className="mb-2 text-[#15144e]">Salutation</label>
+  //                   <select
+  //                     value={form.salutation}
+  //                     onChange={(e) => setField("salutation", e.target.value)}
+  //                     className="rounded border outline-none cursor-pointer border-[#d0d0d0] py-1 px-2 w-full h-full"
+  //                   >
+  //                     <option value="Mr.">Mr.</option>
+  //                     <option value="Mrs">Mrs</option>
+  //                     <option value="Ms.">Ms.</option>
+  //                   </select>
+  //                 </div>
+  //                 <div className="w-full">
+  //                   <Input
+  //                     label="Name *"
+  //                     placeholder="Enter Name"
+  //                     value={form.contact_name}
+  //                     onChange={(e) => setField("contact_name", e.target.value)}
+  //                   />
+  //                   {errors.contact_name && (
+  //                     <p className="text-xs text-red-500 mt-1">{errors.contact_name}</p>
+  //                   )}
+  //                 </div>
+  //               </div>
 
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      maxLength="13"
-                      placeholder="Enter Office Phone Number"
-                      pattern="^(?:\+91|91|0)?[789]\d{9}$"
-                      className="rounded border border-[#d0d0d0] py-1 pl-2 w-full outline-none"
-                    />
-                  </div>
-                  <Input
-                    label="Email ID *"
-                    placeholder="Enter Email Id"
-                    type="email"
-                  />
-                </div>
-                <div className="flex mb-6    gap-4">
-                  <Input label="Login ID *" placeholder="Enter Login ID" />
-                  <Input
-                    label="Login PIN *"
-                    placeholder="Enter Login PIN"
-                    type="password"
-                  />
-                </div>
-                <div className="flex mb-6 gap-4">
-                  <Input
-                    label="Password *"
-                    placeholder="Enter Password"
-                    type="password"
-                  />
-                  <Input
-                    label="Confirm Password *"
-                    placeholder="Re-enter Password"
-                    type="password"
-                  />
-                  <div className="w-full flex flex-col">
-                    <label className="mb-2 text-[#15144e]">Class</label>
+  //               <div className="mb-2">
+  //                 <Input
+  //                   label="Address *"
+  //                   placeholder="Address Line 1"
+  //                   value={form.address_line1}
+  //                   onChange={(e) => setField("address_line1", e.target.value)}
+  //                 />
+  //                 {errors.address_line1 && (
+  //                   <p className="text-xs text-red-500 mt-1">{errors.address_line1}</p>
+  //                 )}
 
-                    <select className="rounded border outline-none cursor-pointer border-[#d0d0d0] py-1 px-2 w-full h-full">
-                      <option value="silver">Silver</option>
-                      <option value="gold">Gold</option>
-                      <option value="diamond">Diamond</option>
-                      <option value="platinum">Platinum</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        );
-      case 1:
-        return (
-          <div>
-            <div>
-              <h4 className="font-semibold mb-4">Tax Information</h4>
-              <form className="text-sm">
-                <div className="flex mb-6 gap-4">
-                  <Input label="Tax No *" placeholder="Enter Tax No" />
-                </div>
-              </form>
-            </div>
-            <div>
-              <h4 className="font-semibold pb-2">Upload Document</h4>
-              <div className="bg-gray-100 min-h-[300px] w-3/4 mx-auto rounded-xl m-4 flex justify-center items-center shadow-md">
-                <div className="flex flex-col items-center">
-                  {!selectedFile ? (
-                    <span className=" text-center mb-4">
-                      Please select a file to upload
-                    </span>
-                  ) : (
-                    <span className="text-white text-center mb-4">
-                      {selectedFile.name}
-                    </span>
-                  )}
-                  <Button
-                    onClick={() => {
-                      fileInputRef.current.click();
-                    }}
-                    variant="primary"
-                  >
-                    Select File
-                  </Button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact Information</h4>
-              <form className="text-sm">
-                <div className="flex mb-6 gap-4">
-                  <div className="w-full flex flex-col">
-                    <label className="mb-2 text-[#15144e]">Class</label>
-                    <select className="rounded border outline-none cursor-pointer border-[#d0d0d0] py-1 px-2 w-full h-full">
-                      <option value="Mr.">Mr.</option>
-                      <option value="Mrs">Mrs</option>
-                      <option value="Ms.">Ms.</option>
-                    </select>
-                  </div>
-                  <Input label="Name *" placeholder="Enter Name" />
-                </div>
-                <div className=" mb-2">
-                  <Input label="Address *" placeholder="Address Line 1" />
-                  <Input placeholder="Address Line 2" />
-                </div>
-                  <LocationSelector/>
-              </form>
-            </div>
-          </div>
-        );
-    }
-  };
+  //                 <Input
+  //                   placeholder="Address Line 2"
+  //                   value={form.address_line2}
+  //                   onChange={(e) => setField("address_line2", e.target.value)}
+  //                 />
+  //               </div>
+
+  //               <div className="mb-4">
+  //                 {/* LocationSelector should call handleLocationChange with
+  //                     { country_id, state_id, city_id, postal_code } or similar.
+  //                     Adjust if your Address component uses different prop names. */}
+  //                 <LocationSelector onChange={handleLocationChange} value={{
+  //                   country_id: form.country_id,
+  //                   state_id: form.state_id,
+  //                   city_id: form.city_id,
+  //                   postal_code: form.postal_code
+  //                 }} />
+  //                 {errors.country_id && <p className="text-xs text-red-500 mt-1">{errors.country_id}</p>}
+  //                 {errors.state_id && <p className="text-xs text-red-500 mt-1">{errors.state_id}</p>}
+  //                 {errors.city_id && <p className="text-xs text-red-500 mt-1">{errors.city_id}</p>}
+  //               </div>
+
+  //               {/* <div className="mb-6">
+  //                 <Input
+  //                   label="GST Company Name"
+  //                   placeholder="GST Company Name"
+  //                   value={form.gst_company_name}
+  //                   onChange={(e) => setField("gst_company_name", e.target.value)}
+  //                 />
+  //                 <Input
+  //                   label="GST Number"
+  //                   placeholder="GST Number"
+  //                   value={form.gst_number}
+  //                   onChange={(e) => setField("gst_number", e.target.value)}
+  //                 />
+  //               </div> */}
+  //             </form>
+  //           </div>
+  //         </div>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div>
@@ -192,7 +300,8 @@ export default function AddAgentForm() {
           </div>
         </Link>
       </div>
-      <div className="px-6">
+
+      {/* <div className="px-6">
         <div className="flex items-center justify-between relative">
           {steps.map((step, index) => {
             const isActive = index === activeStep;
@@ -229,32 +338,177 @@ export default function AddAgentForm() {
             </p>
           ))}
         </div>
-      </div>
+      </div> */}
+
       <div className="rounded bg-white p-4 mt-6">
-        {renderStepContent()}
+        {/* {renderStepContent()} */}
+
+        <div>
+            <h4 className="font-semibold mb-4 text-[#15144e]">Company Basic Information</h4>
+            <form className="text-sm" onSubmit={(e) => e.preventDefault()}>
+              <div>
+                <div className="flex mb-6 gap-4">
+                  <div className="w-full">
+                    <Input
+                      label="Company Name *"
+                      placeholder="Enter Company Name"
+                      value={form.company_name}
+                      onChange={(e) => setField("company_name", e.target.value)}
+                    />
+                    {errors.company_name && (
+                      <p className="text-xs text-red-500 mt-1">{errors.company_name}</p>
+                    )}
+                  </div>
+
+                  <div className="w-full flex flex-col">
+                    <label className="mb-2 text-[#15144e]">Mobile *</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength="13"
+                      placeholder="Enter Mobile"
+                      value={form.mobile}
+                      onChange={(e) => setField("mobile", e.target.value)}
+                      className="rounded border border-[#d0d0d0] py-1 px-2 w-full outline-none"
+                    />
+                    {errors.mobile && <p className="text-xs text-red-500 mt-1">{errors.mobile}</p>}
+                  </div>
+                </div>
+
+                <div className="flex mb-6 gap-4">
+                  <div className="w-full flex flex-col">
+                    <label className="mb-2 text-[#15144e]">Office Phone Number</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength="13"
+                      placeholder="Enter Office Phone Number"
+                      value={form.office_phone}
+                      onChange={(e) => setField("office_phone", e.target.value)}
+                      className="rounded border border-[#d0d0d0] py-1 pl-2 w-full outline-none"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <Input
+                      label="Email ID *"
+                      placeholder="Enter Email Id"
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setField("email", e.target.value)}
+                    />
+                    {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+                    {serverErrors.email && (
+                      <p className="text-xs text-red-500 mt-1">{serverErrors.email.join(", ")}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex mb-6 gap-4">
+                  <div className="w-full">
+                    <Input
+                      label="Login ID *"
+                      name="login_id"
+                      placeholder="Enter Login ID"
+                      value={form.login_id}
+                      onChange={(e) => setField("login_id", e.target.value)}
+                    />
+                    {errors.login_id && (
+                      <p className="text-xs text-red-500 mt-1">{errors.login_id}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div>
+            <div>
+              <h4 className="font-semibold mb-4">Tax Information</h4>
+              <form className="text-sm" onSubmit={(e) => e.preventDefault()}>
+                <div className="flex mb-6 gap-4">
+                  <Input
+                    label="Tax No"
+                    placeholder="Enter Tax No"
+                    value={form.tax_no}
+                    onChange={(e) => setField("tax_no", e.target.value)}
+                  />
+                </div>
+              </form>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Contact Information</h4>
+              <form className="text-sm" onSubmit={(e) => e.preventDefault()}>
+                <div className="flex mb-6 gap-4">
+                  <div className="w-full flex flex-col">
+                    <label className="mb-2 text-[#15144e]">Salutation</label>
+                    <select
+                      value={form.salutation}
+                      onChange={(e) => setField("salutation", e.target.value)}
+                      className="rounded border outline-none cursor-pointer border-[#d0d0d0] py-1 px-2 w-full h-full"
+                    >
+                      <option value="Mr.">Mr.</option>
+                      <option value="Mrs">Mrs</option>
+                      <option value="Ms.">Ms.</option>
+                    </select>
+                  </div>
+                  <div className="w-full">
+                    <Input
+                      label="Name *"
+                      placeholder="Enter Name"
+                      value={form.contact_name}
+                      onChange={(e) => setField("contact_name", e.target.value)}
+                    />
+                    {errors.contact_name && (
+                      <p className="text-xs text-red-500 mt-1">{errors.contact_name}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mb-2">
+                  <Input
+                    label="Address *"
+                    placeholder="Address Line 1"
+                    value={form.address_line1}
+                    onChange={(e) => setField("address_line1", e.target.value)}
+                  />
+                  {errors.address_line1 && (
+                    <p className="text-xs text-red-500 mt-1">{errors.address_line1}</p>
+                  )}
+
+                  <Input
+                    placeholder="Address Line 2"
+                    value={form.address_line2}
+                    onChange={(e) => setField("address_line2", e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <LocationSelector onChange={handleLocationChange} value={{
+                    country_id: form.country_id,
+                    state_id: form.state_id,
+                    city_id: form.city_id,
+                    postal_code: form.postal_code
+                  }} />
+                  {errors.country_id && <p className="text-xs text-red-500 mt-1">{errors.country_id}</p>}
+                  {errors.state_id && <p className="text-xs text-red-500 mt-1">{errors.state_id}</p>}
+                  {errors.city_id && <p className="text-xs text-red-500 mt-1">{errors.city_id}</p>}
+                </div>
+              </form>
+            </div>
+          </div>
+
         <div className="flex justify-end">
           <div className="flex gap-2">
-            <Button
-              onClick={() => setActiveStep((prev) => Math.max(prev - 1, 0))}
-              disabled={activeStep === 0}
-              className={`p-2-rounded ${activeStep === 0 ? "hidden" : ""}`}
-              variant="secondary"
-            >
-              Previous
-            </Button>
-            {activeStep < steps.length - 1 ? (
-              <Button onClick={() => setActiveStep((prev) => prev + 1)}>
-                Next
-              </Button>
-            ) : (
               <Button
-                onClick={() => alert("Form submitted!")}
+                onClick={handleSubmit}
+                disabled={loading}
                 className="bg-green-500 hover:bg-green-600"
                 variant="primary"
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </Button>
-            )}
+            {/* )} */}
           </div>
         </div>
       </div>
