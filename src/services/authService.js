@@ -4,13 +4,13 @@ export const login = async (email, password) => {
   await initSanctum();
   const xsrf = getCookie("XSRF-TOKEN");
   if (xsrf) {
-    authClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
   } else {
     console.warn("XSRF-TOKEN cookie not found in document.cookie");
   }
 
   // Step 3 - now call login
-  const res = await authClient.post("/api/login", { email, password, role: "admin" });
+  const res = await gatewayClient.post("/login", { email, password, role: "admin" });
   return res.data;
 };
 
@@ -27,26 +27,26 @@ export const setXSRFToken = () => {
 export const logout = async () => {
   const xsrf = getCookie("XSRF-TOKEN");
   if (xsrf) {
-    authClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
   } else {
     console.warn("XSRF-TOKEN cookie not found in document.cookie");
   }
   
-  await authClient.post("/api/logout");
+  await gatewayClient.post("/logout");
 };
 
 export const getCurrentUser = async () => {
-  const { data } = await gatewayClient.get("/gateway/me");
+  const { data } = await gatewayClient.get("/user");
   return data;
 };
 
 export const createAgent = async (agentData) => {
   const xsrf = getCookie("XSRF-TOKEN");
   if (xsrf) {
-    authClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
   } else {
     console.warn("XSRF-TOKEN cookie not found in document.cookie");
   }
-  const { data } = await authClient.post("/api/agents", agentData);
+  const { data } = await gatewayClient.post("/agents", agentData);
   return data;
 }
