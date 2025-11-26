@@ -1,14 +1,14 @@
 // import { getXSRFToken } from "./authService";
 
-import { authClient, getCookie } from "../lib/axiosClient";
+import { authClient, gatewayClient, getCookie } from "../lib/axiosClient";
 
 export const getAgents = async () => {
   const xsrf = getCookie("XSRF-TOKEN");
   if (xsrf) {
-    authClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
   } else {
     console.warn("XSRF-TOKEN cookie not found in document.cookie");
   }
-  const { data } = await authClient.get("/api/agents");
+  const { data } = await gatewayClient.get("/agents");
   return data;
 };

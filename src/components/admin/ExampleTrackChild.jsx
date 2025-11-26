@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export default function ExampleTrackChild() {
-  const [isActive, setIsActive] = useState(true);
+export default function ExampleTrackChild({is_active}) {
+  const [isActive, setIsActive] = useState(is_active);
 
   return (
     <div className="flex justify-center  items-center w-full  mx-auto">
@@ -12,13 +12,13 @@ export default function ExampleTrackChild() {
         } `}
       >
         <span
-          className={`text-sm transition-colors duration-300 
+          className={`text-sm transition-colors duration-300 cursor-pointer
           }`}
         >
           Inactive
         </span>
         <span
-          className={`text-sm transition-colors duration-300 
+          className={`text-sm transition-colors duration-300 cursor-pointer
           `}
         >
           Active
@@ -27,7 +27,7 @@ export default function ExampleTrackChild() {
         {/* Thumb */}
         <div
           className={`
-            absolute w-1/2 rounded-full  flex items-center justify-center text-sm transition-all  duration-300  cursor-pointer 
+            absolute w-1/2 rounded-full  flex items-center justify-center text-sm transition-all  duration-300  
             ${
               isActive
                 ? "left-0 top-1 bottom-1  ml-1 bg-[#EEEEEE] text-[#15144E] transition "

@@ -16,6 +16,8 @@ import AddNewCustomerFormPage from "../pages/AddNewCustomerPage";
 import SystemSettingsPage from "../pages/SystemSettingsPage";
 import Guest from './authComponents/Guest';
 import Protected from './authComponents/Protected';
+import MainWallet from '../pages/MainWallet';
+import AdminLayout from './admin/AdminLayout/AdminLayout';
 
 function RoutesList() {
     return (
@@ -34,6 +36,11 @@ function RoutesList() {
                 <Route path="/agentlist" element={
                     <Protected route={true} roles={['admin']}>
                         <AgentList />
+                    </Protected>
+                } />
+                <Route path="/topup" element={
+                    <Protected route={true} roles={['admin']}>
+                        <AdminLayout children={<MainWallet />} />
                     </Protected>
                 } />
                 <Route path="/addagent" element={

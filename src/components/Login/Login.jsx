@@ -34,7 +34,7 @@ export default function Login() {
     <div className="w-full max-w-md mx-auto px-4">
       <div className="flex flex-col items-center">
         <img
-          src="/images/logo.svg"
+          src="/react/images/logo.svg"
           alt="A fine trip logo"
           className="mb-6"
         />

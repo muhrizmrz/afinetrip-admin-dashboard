@@ -48,7 +48,7 @@
   export const bookingClient = createAxiosClient("booking");
   export const searchClient = createAxiosClient("search");
 
-  export const initSanctum = async (service = "auth") => {
+  export const initSanctum = async (service = "gateway") => {
     await axios.get(`${baseURLs[service]}/sanctum/csrf-cookie`, {
       withCredentials: true,
     });

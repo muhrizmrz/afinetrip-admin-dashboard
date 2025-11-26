@@ -34,6 +34,7 @@ export const sideBarMenuItems = [
     name: "Finance & Payments",
     image: "/images/flight_management.svg",
     link: "/",
+    subItems: [{ name: "Top Up", image: "", link: "/topup" }],
   },
   {
     name: "Content Management",
@@ -141,10 +142,10 @@ export const agentListTableHeader = [
     field: "balance",
     headerName: "Balance",
   },
-  {
-    field: "credit",
-    headerName: "Credit",
-  },
+  // {
+  //   field: "credit",
+  //   headerName: "Credit",
+  // },
   {
     field: "status",
     headerName: "Status",
