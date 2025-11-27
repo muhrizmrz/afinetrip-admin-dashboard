@@ -7,7 +7,7 @@ export const sideBarMenuItems = [
       {
         name: "Add Agent",
         // image: "/images/add-user-svgrepo-com.svg",
-        link: "/addagent",
+        link: "/add-agent",
       },
       { name: "Add Class", image: "", link: "/addclass" },
       { name: "Agent List", image: "", link: "/agentlist" },
@@ -142,10 +142,10 @@ export const agentListTableHeader = [
     field: "balance",
     headerName: "Balance",
   },
-  // {
-  //   field: "credit",
-  //   headerName: "Credit",
-  // },
+  {
+    field: "credit",
+    headerName: "Credit ",
+  },
   {
     field: "status",
     headerName: "Status",

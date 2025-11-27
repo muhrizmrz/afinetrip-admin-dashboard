@@ -13,61 +13,7 @@ import { deductCreditFromAgent, updateAgentCredit } from "../../services/walletS
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Euro } from "lucide-react";
-
-
-
-//sample data
-// const rows = [
-//   {
-//     id: "1",
-//     agency: "Talentmicro",
-//     agent: "Akilamol joby",
-//     balance: " 5,75,885",
-//     credit: " 2,55,335",
-//   },
-//   {
-//     id: "2",
-//     agency: "Marein Hospital",
-//     agent: "Arun kumar Pushpangathan",
-//     balance: " 2,55,335",
-//     credit: " 2,55,335",
-//   },
-//   {
-//     id: "3",
-//     agency: "Muhlbauer",
-//     agent: "Mohammed ameen Maliyakal",
-//     balance: " 2,50,000",
-//     credit: " 2,55,335",
-//   },
-//   {
-//     id: "4",
-//     agency: "Student",
-//     agent: "Nebil Bava",
-//     balance: " 2,55,335",
-//     credit: " 55,200",
-//   },
-//   {
-//     id: "5",
-//     agency: "Meleparambil",
-//     agent: "Aswanth Mp",
-//     balance: " 2,55,335",
-//     credit: " 28,000",
-//   },
-//   {
-//     id: "6",
-//     agency: "Muhlbauer",
-//     agent: "Jumana Haseen",
-//     balance: " 75,000",
-//     credit: " 10,000",
-//   },
-//   {
-//     id: "7",
-//     agency: "Talentmicro",
-//     agent: "Sam",
-//     balance: "1,15,200",
-//     credit: "15,500",
-//   },
-// ];
+import { Link } from "react-router-dom";
 
 export default function DataTable() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -75,7 +21,7 @@ export default function DataTable() {
 
   const [isManageCreditOpen, setIsManageCreditOpen] = useState(false);
   const [amount, setAmount] = useState('');
-  const [UpdateCreditLoading, SetUpdateCreditLoading] = useState(false);
+  const [updateCreditLoading, setUpdateCreditLoading] = useState(false);
   const [agentId, setAgentId] = useState(null);
   const [creditAction, setCreditAction] = useState('add'); // 'add' or 'deduct'
 
@@ -107,16 +53,16 @@ export default function DataTable() {
   const rows = data || [];
 
   // --- Dynamic Stats ---
-const activeCount = rows.filter(a => a.is_active).length;
-const inactiveCount = rows.filter(a => !a.is_active).length;
+  const activeCount = rows.filter(a => a.is_active).length;
+  const inactiveCount = rows.filter(a => !a.is_active).length;
 
-// Sum all balances safely
-const totalBalance = rows.reduce((sum, a) => {
-  const bal = Number(a?.wallet_accounts?.[0]?.balance || 0);
-  return sum + bal;
-}, 0);
+  // Sum all balances safely
+  const totalBalance = rows.reduce((sum, a) => {
+    const bal = Number(a?.wallet_accounts?.[0]?.balance || 0);
+    return sum + bal;
+  }, 0);
 
-  console.log('Rows in AgentListTable:', rows);
+  // console.log('Rows in AgentListTable:', rows);
 
   // Helper toggle (unchanged)
   const handleToggleDropdown = (e, id) => {
@@ -252,38 +198,44 @@ const totalBalance = rows.reduce((sum, a) => {
       return await updateAgentCredit({ amount, agent_id });
     },
 
+    onMutate: () => {
+      setUpdateCreditLoading(true);
+    },
+
     onSuccess: (_, { amount, agent_id, action }) => {
-  queryClient.setQueryData(["agents"], (oldAgents) => {
-    if (!oldAgents) return oldAgents;
+      queryClient.setQueryData(["agents"], (oldAgents) => {
+        if (!oldAgents) return oldAgents;
 
-    return oldAgents.map((agent) => {
-      if (agent.id !== agent_id) return agent;
+        return oldAgents.map((agent) => {
+          if (agent.id !== agent_id) return agent;
 
-      const currentBalance = Number(agent.wallet_accounts[0].balance);
+          const currentBalance = Number(agent.wallet_accounts[0].balance);
 
-      const updatedBalance =
-        action === "add"
-          ? currentBalance + Number(amount)
-          : currentBalance - Number(amount);
+          const updatedBalance =
+            action === "add"
+              ? currentBalance + Number(amount)
+              : currentBalance - Number(amount);
+            
+          setUpdateCreditLoading(false);
+          
 
-      return {
-        ...agent,
-        wallet_accounts: [
-          {
-            ...agent.wallet_accounts[0],
-            balance: updatedBalance,
-          },
-        ],
-      };
-    });
-  });
+          return {
+            ...agent,
+            wallet_accounts: [
+              {
+                ...agent.wallet_accounts[0],
+                balance: updatedBalance,
+              },
+            ],
+          };
+        });
+      });
 
-  toast.success(
-    `₹${amount.toLocaleString("en-IN")} ${
-      action === "add" ? "added" : "deducted"
-    } successfully!`
-  );
-},
+        toast.success(
+          `₹${amount.toLocaleString("en-IN")} ${action === "add" ? "added" : "deducted"
+          } successfully!`
+        );
+    },
 
 
     onError: (err) => {
@@ -384,7 +336,7 @@ const totalBalance = rows.reduce((sum, a) => {
                   <td className="p-3   font-semibold text-left">{row.contact_name}</td>
                   <td className="p-3 text-gray-500">
                     <div className="flex gap-2 justify-center items-center">
-                      {"\u20AC"}
+                      {/* {"\u20AC"} */}
                       {new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number(row?.wallet_accounts?.[0]?.balance || 0))}
                     </div>
                   </td>
@@ -430,16 +382,17 @@ const totalBalance = rows.reduce((sum, a) => {
                           </button>
 
                           {/* Edit Agent */}
-                          <button
-                            onClick={() => {
-                              handleEdit(agent);
-                              setOpenDropdownId(null);
-                            }}
+                          <Link
+                            // onClick={() => {
+                            //   handleEdit(agent);
+                            //   setOpenDropdownId(null);
+                            // }}
+                            to={`/edit-agent/${row.id}`}
                             className="w-full flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all"
                           >
                             {/* <edit className="w-4 h-4" /> */}
                             <span>Edit Agent</span>
-                          </button>
+                          </Link>
 
                           {/* Credit Management */}
                           <button

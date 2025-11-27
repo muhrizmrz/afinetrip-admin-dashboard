@@ -18,6 +18,8 @@ import Guest from './authComponents/Guest';
 import Protected from './authComponents/Protected';
 import MainWallet from '../pages/MainWallet';
 import AdminLayout from './admin/AdminLayout/AdminLayout';
+import AddAgentPage from '../pages/agents/AddAgentPage';
+import EditAgentPage from '../pages/agents/EditAgentPage';
 
 function RoutesList() {
     return (
@@ -43,9 +45,14 @@ function RoutesList() {
                         <AdminLayout children={<MainWallet />} />
                     </Protected>
                 } />
-                <Route path="/addagent" element={
+                <Route path="/add-agent" element={
                     <Protected route={true} roles={['admin']}>
-                        <AddAgent />
+                        <AdminLayout children={<AddAgentPage />} />
+                    </Protected>
+                } />
+                <Route path="/edit-agent/:id" element={
+                    <Protected route={true} roles={['admin']}>
+                        <AdminLayout children={<EditAgentPage />} />
                     </Protected>
                 } />
                 <Route path="/addclass" element={

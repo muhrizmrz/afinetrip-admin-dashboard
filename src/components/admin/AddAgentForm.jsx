@@ -7,7 +7,7 @@ import Button from "../utility/Button";
 import Input from "../utility/Input";
 import LocationSelector from "../utility/Address";
 import toast from "react-hot-toast";
-import { createAgent } from "../../services/authService";
+import { createAgent } from "../../services/agentService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function AddAgentForm() {
@@ -118,23 +118,23 @@ export default function AddAgentForm() {
 
       // Reset your form
       // (same as your commented code)
-      setForm({
-        name: "",
-        email: "",
-        company_name: "",
-        mobile: "",
-        office_phone: "",
-        login_id: "",
-        tax_no: "",
-        salutation: "Mr.",
-        contact_name: "",
-        address_line1: "",
-        address_line2: "",
-        country_id: null,
-        state_id: null,
-        city_id: null,
-        postal_code: "",
-      });
+      // setForm({
+      //   name: "",
+      //   email: "",
+      //   company_name: "",
+      //   mobile: "",
+      //   office_phone: "",
+      //   login_id: "",
+      //   tax_no: "",
+      //   salutation: "Mr.",
+      //   contact_name: "",
+      //   address_line1: "",
+      //   address_line2: "",
+      //   country_id: null,
+      //   state_id: null,
+      //   city_id: null,
+      //   postal_code: "",
+      // });
 
       // Navigate to agent list or another page if needed
       // navigate("/agentlist");
