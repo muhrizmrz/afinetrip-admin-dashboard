@@ -162,7 +162,7 @@ export default function AgentForm({ agent = null, onSuccess }) {
         <h1 className="text-xl font-semibold text-[#15144E]">
           {isEdit ? "Edit Agent" : "Add Agent"}
         </h1>
-        <Link to="/agentlist" className="flex gap-2">
+        <Link to="/agents" className="flex gap-2">
           <span className="text-[#15144E] text-m">Agent List</span>
           <div className="flex items-center justify-center rounded-full bg-[#15144E] hover:bg-[#2a2965] w-6 h-6">
             <FaArrowRight className="text-white text-xs" />

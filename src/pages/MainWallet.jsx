@@ -1,75 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// pages/MainWallet.jsx
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast, Toaster } from 'react-hot-toast';
-import { Wallet, Plus, Loader2, IndianRupee, Euro } from 'lucide-react';
-import { getMainBalance, topUp } from '../services/walletService';
+import { Wallet, Plus, Loader2, Euro } from 'lucide-react';
+
+import { getMainBalance, getTopUpHistory, topUp } from '../services/walletService';
 import Breadcrumbs from '../components/utility/Breadcrumbs';
+import TopUpModal from '../components/wallet/TopUpModal';
+import TopUpTransactions from '../components/wallet/TopUpTransactions';
 
 export default function MainWallet() {
-  const [balance, setBalance] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const [amount, setAmount] = useState('');
-  const [topUpLoading, setTopUpLoading] = useState(false);
 
-  const token = localStorage.getItem('token');
+  // Fetch Balance
+  const {
+    data: balanceData,
+    isLoading: balanceLoading,
+    error: balanceError,
+  } = useQuery({
+    queryKey: ['mainWalletBalance'],
+    queryFn: getMainBalance,
+  });
 
-  // Fetch main wallet balance
-  const fetchBalance = async () => {
-    try {
-      setLoading(true);
-      const data = await getMainBalance();
-      console.log('Wallet Balance Data:', data);
-      setBalance(data.balance || 0);
-    } catch (err) {
-      toast.error('Failed to load wallet balance');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch Transactions (will be used inside RecentTransactions too)
+  const { data: transactionsData, isLoading: txLoading } = useQuery({
+    queryKey: ['topUpHistory'],
+    queryFn: getTopUpHistory,
+  });
 
-  // Handle top-up
-  const handleTopUp = async () => {
+  // Top-Up Mutation
+  const topUpMutation = useMutation({
+    mutationFn: topUp,
+    onSuccess: () => {
+      toast.success(`₹${parseFloat(amount).toLocaleString('en-IN')} added successfully!`);
+      
+      // Invalidate and refetch both queries
+      queryClient.invalidateQueries({ queryKey: ['mainWalletBalance'] });
+      queryClient.invalidateQueries({ queryKey: ['topUpHistory'] });
+
+      setAmount('');
+      setIsTopUpOpen(false);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Top-up failed');
+    },
+  });
+
+  const handleTopUp = () => {
     const numAmount = parseFloat(amount);
-    if (!amount || numAmount < 100) {
+    if (numAmount < 100) {
       toast.error('Minimum top-up amount is ₹100');
       return;
     }
-
-    try {
-      setTopUpLoading(true);
-      await topUp({ amount: numAmount});
-
-      toast.success(`₹${numAmount.toLocaleString('en-IN')} added successfully!`);
-      setAmount('');
-      setIsTopUpOpen(false);
-      fetchBalance();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Top-up failed');
-    } finally {
-      setTopUpLoading(false);
-    }
+    topUpMutation.mutate({ amount: numAmount });
   };
 
-  useEffect(() => {
-    fetchBalance();
-  }, []);
+  const balance = balanceData?.balance || 0;
 
   return (
     <>
       <Toaster position="top-right" />
       <Breadcrumbs />
+
       <div className="min-h-screen bg-transparent p-4 md:px-8">
         <div className="max-w-5xl mx-auto">
-
-          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Top Up</h1>
-            {/* <p className="text-gray-600 mt-1">Manage platform-wide credits for all agents & bookings</p> */}
+            <h1 className="text-3xl font-bold text-gray-900">Main Wallet</h1>
+            <p className="text-gray-600 mt-1">Manage platform credits for bookings</p>
           </div>
 
           {/* Balance Card */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden mb-8">
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -83,7 +86,7 @@ export default function MainWallet() {
                 </div>
                 <button
                   onClick={() => setIsTopUpOpen(true)}
-                  className="bg-white text-blue-700 cursor-pointer hover:bg-blue-50 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition"
+                  className="bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition"
                 >
                   <Plus className="w-5 h-5" />
                   Top Up
@@ -92,7 +95,7 @@ export default function MainWallet() {
             </div>
 
             <div className="p-8">
-              {loading ? (
+              {balanceLoading ? (
                 <div className="flex justify-center py-12">
                   <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                 </div>
@@ -108,21 +111,19 @@ export default function MainWallet() {
                 </div>
               )}
 
-              {/* Stats Grid */}
+              {/* Stats - You can make these dynamic later */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                 <div className="bg-gray-50 rounded-xl p-6 text-center">
                   <p className="text-gray-600 text-sm">Total Top-ups</p>
-                  <p className="text-3xl font-bold text-green-600 mt-1 inline-flex items-center"> 
-                    <Euro className="w-8 h-8 text-green-600" />
-                    1,85,000
-                    </p>
+                  <p className="text-3xl font-bold text-green-600 mt-1 flex items-center justify-center gap-2">
+                    <Euro className="w-8 h-8" />1,85,000
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-6 text-center">
                   <p className="text-gray-600 text-sm">Total Spent</p>
-                  <p className="text-3xl font-bold text-blue-600 mt-1 inline-flex items-center">
-                    <Euro className="w-8 h-8 text-blue-600" />
-                    1,42,300
-                    </p>
+                  <p className="text-3xl font-bold text-blue-600 mt-1 flex items-center justify-center gap-2">
+                    <Euro className="w-8 h-8" />1,42,300
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-6 text-center">
                   <p className="text-gray-600 text-sm">Low Balance Alert</p>
@@ -132,68 +133,22 @@ export default function MainWallet() {
             </div>
           </div>
 
-          {/* Recent Transactions Placeholder */}
-          <div className="mt-8 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Transactions</h2>
-            <div className="text-center py-12 text-gray-500">
-              Transaction history will appear here once top-ups are made
-            </div>
+          {/* Recent Transactions */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Transactions</h2>
+            <TopUpTransactions />
           </div>
         </div>
       </div>
 
-      {/* Top-Up Modal */}
-      {isTopUpOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Top Up Main Wallet</h2>
-            <p className="text-gray-600 mb-6">Add credits to your platform's main wallet</p>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Amount (₹)
-                </label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Enter amount"
-                  min="100"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition"
-                />
-                <p className="text-sm text-gray-500 mt-2">Minimum top-up: ₹100</p>
-              </div>
-            </div>
-
-            <div className="flex gap-3 mt-8">
-              <button
-                onClick={() => {
-                  setIsTopUpOpen(false);
-                  setAmount('');
-                }}
-                className="flex-1 py-3 border cursor-pointer border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleTopUp}
-                disabled={topUpLoading || !amount || parseFloat(amount) < 100}
-                className="flex-1 bg-blue-600 cursor-pointer text-white py-3 rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition"
-              >
-                {topUpLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  'Top Up Wallet'
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <TopUpModal
+        isOpen={isTopUpOpen}
+        onClose={() => setIsTopUpOpen(false)}
+        amount={amount}
+        setAmount={setAmount}
+        onTopUp={handleTopUp}
+        loading={topUpMutation.isPending}
+      />
     </>
   );
 }

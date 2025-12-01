@@ -45,3 +45,15 @@ export const getAgent = async (id) => {
   const { data } = await gatewayClient.get("/agents/" + id);
   return data.agent;
 };
+
+export const changeAgentStatus = async (id, payload) => {
+  const xsrf = getCookie("XSRF-TOKEN");
+  if (xsrf) {
+    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+  } else {
+    console.warn("XSRF-TOKEN cookie not found in document.cookie");
+  }
+  console.log("Payload in service:", payload);
+  const { data } = await gatewayClient.patch(`/agents/${id}/status`, payload);
+  return data;
+};

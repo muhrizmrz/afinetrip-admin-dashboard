@@ -10,7 +10,7 @@ export const sideBarMenuItems = [
         link: "/add-agent",
       },
       { name: "Add Class", image: "", link: "/addclass" },
-      { name: "Agent List", image: "", link: "/agentlist" },
+      { name: "Agent List", image: "", link: "/agents" },
       { name: "Agent Class List", image: "", link: "/classlist" },
       { name: "Agent Deposit Request List", image: "", link: "/depreqlist" },
     ],

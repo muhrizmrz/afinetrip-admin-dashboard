@@ -20,6 +20,7 @@ import MainWallet from '../pages/MainWallet';
 import AdminLayout from './admin/AdminLayout/AdminLayout';
 import AddAgentPage from '../pages/agents/AddAgentPage';
 import EditAgentPage from '../pages/agents/EditAgentPage';
+import AgentDetails from '../pages/agents/AgentDetails';
 
 function RoutesList() {
     return (
@@ -35,9 +36,14 @@ function RoutesList() {
                         <AdminDashboard />
                     </Protected>
                 } />
-                <Route path="/agentlist" element={
+                <Route path="/agents" element={
                     <Protected route={true} roles={['admin']}>
                         <AgentList />
+                    </Protected>
+                } />
+                <Route path="/agents/:agentId" element={
+                    <Protected route={true} roles={['admin']}>
+                        <AdminLayout children={<AgentDetails />} />
                     </Protected>
                 } />
                 <Route path="/topup" element={

@@ -4,5 +4,5 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddAgentPage() {
   const navigate = useNavigate();
-  return <AgentForm onSuccess={() => navigate("/agentlist")} />;
+  return <AgentForm onSuccess={() => navigate("/agents")} />;
 }

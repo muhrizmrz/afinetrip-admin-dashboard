@@ -8,14 +8,17 @@ import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { agentListTableHeader } from "../utility/MenuItems";
 import Button from "../utility/Button";
-import { getAgents } from "../../services/agentService";
+import { changeAgentStatus, getAgents } from "../../services/agentService";
 import { deductCreditFromAgent, updateAgentCredit } from "../../services/walletService";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Euro } from "lucide-react";
 import { Link } from "react-router-dom";
+import Modal from "../utility/Modal";
+import AgentDetails from "../agent/AgentDetails";
+import AgentStatusToggle from "../agent/AgentStatusToggle";
 
-export default function DataTable() {
+export default function AgentListTable() {
   const [currentPage, setCurrentPage] = useState(1);
   // const [rows, setRows] = useState([]);
 
@@ -24,19 +27,12 @@ export default function DataTable() {
   const [updateCreditLoading, setUpdateCreditLoading] = useState(false);
   const [agentId, setAgentId] = useState(null);
   const [creditAction, setCreditAction] = useState('add'); // 'add' or 'deduct'
+  const [viewAgentDetails, setViewAgentDetails] = useState(null);
+  const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
 
 
   const [openDropdownId, setOpenDropdownId] = useState(null); // added for dropdown open state
   const dropdownRefs = useRef({});
-
-  // useEffect(() => {
-  //   const fetchAgents = async () => {
-  //     const data = await getAgents();
-  //     console.log(data);
-  //     setRows(data.agents || []);
-  //   }
-  //   fetchAgents();
-  // }, []);
 
   const queryClient = useQueryClient();
 
@@ -49,6 +45,7 @@ export default function DataTable() {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes caching
   });
+
 
   const rows = data || [];
 
@@ -69,53 +66,6 @@ export default function DataTable() {
     e.stopPropagation();
     setOpenDropdownId((prev) => (prev === id ? null : id));
   };
-
-  // const handleCreditUpdate = async () => {
-  //   const numAmount = parseFloat(amount);
-  //   if (!amount || numAmount < 100) {
-  //     toast.error('Minimum amount is ₹100');
-  //     return;
-  //   }
-
-  //   try {
-  //     SetUpdateCreditLoading(true);
-  //     if (creditAction === 'deduct') {
-  //       await deductCreditFromAgent({ amount: numAmount, agent_id: agentId });
-  //     } else {
-  //     await updateAgentCredit({ amount: numAmount, agent_id: agentId });
-  //     }
-
-  //     toast.success(`₹${numAmount.toLocaleString('en-IN')} added successfully!`);
-  //     setAmount('');
-  //     // SetUpdateCreditLoading(false);
-  //     // fetchBalance();
-  //   } catch (err) {
-  //     toast.error(err.response?.data?.message || 'Top-up failed');
-  //   } finally {
-  //     setIsManageCreditOpen(false);
-  //     SetUpdateCreditLoading(false);
-  //   }
-  // };
-
-  // --- New PortalDropdown component inside this file ---
-  // const handleCreditUpdate = () => {
-  //   const numAmount = parseFloat(amount);
-
-  //   if (!amount || numAmount < 100) {
-  //     toast.error("Minimum amount is ₹100");
-  //     return;
-  //   }
-
-  //   updateCreditMutation.mutate({
-  //     amount: numAmount,
-  //     agent_id: agentId,
-  //     action: creditAction,
-  //   });
-
-  //   setIsManageCreditOpen(false);
-  //   setAmount("");
-  //   setCreditAction("add");
-  // };
 
   function PortalDropdown({ anchorEl, isOpen, onClose, children, alignRight = true }) {
     const dropdownRef = useRef(null);
@@ -179,7 +129,7 @@ export default function DataTable() {
   const handleManageCredit = (id) => {
     setAgentId(id);
     setAmount('');
-    setCreditAction('add'); // default to Add tab
+    setCreditAction('add');
     setIsManageCreditOpen(true);
   };
 
@@ -215,9 +165,9 @@ export default function DataTable() {
             action === "add"
               ? currentBalance + Number(amount)
               : currentBalance - Number(amount);
-            
+
           setUpdateCreditLoading(false);
-          
+
 
           return {
             ...agent,
@@ -231,10 +181,10 @@ export default function DataTable() {
         });
       });
 
-        toast.success(
-          `₹${amount.toLocaleString("en-IN")} ${action === "add" ? "added" : "deducted"
-          } successfully!`
-        );
+      toast.success(
+        `₹${amount.toLocaleString("en-IN")} ${action === "add" ? "added" : "deducted"
+        } successfully!`
+      );
     },
 
 
@@ -333,7 +283,7 @@ export default function DataTable() {
                   <td className="p-3   font-semibold text-left">
                     {row.company_name}
                   </td>
-                  <td className="p-3   font-semibold text-left">{row.contact_name}</td>
+                  <td className="p-3   font-semibold text-left"><Link to={`/agents/${row.id}`}>{row.contact_name}</Link></td>
                   <td className="p-3 text-gray-500">
                     <div className="flex gap-2 justify-center items-center">
                       {/* {"\u20AC"} */}
@@ -347,7 +297,8 @@ export default function DataTable() {
                     </div>
                   </td>
                   <td className="px-3  py-3 text-sm text-right  text-[#15144e]">
-                    <ExampleTrackChild is_active={row.is_active} />
+                    {/* <ExampleTrackChild agentId={row.id} is_active={row.is_active} /> */}
+                    <AgentStatusToggle agentId={row.id} is_active={row.is_active} />
                   </td>
                   <td className="px-3  py-3 text-sm text-right text-[#15144e]">
                     <div className="flex gap-[10px] align-center w-full justify-center">
@@ -372,8 +323,9 @@ export default function DataTable() {
                         >
                           <button
                             onClick={() => {
-                              handleViewDetails(agent);
-                              setOpenDropdownId(null);
+                              setIsViewDetailsOpen(true);
+                              setViewAgentDetails(row);
+                              // setOpenDropdownId(null);
                             }}
                             className="w-full flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all"
                           >
@@ -395,6 +347,18 @@ export default function DataTable() {
                           </Link>
 
                           {/* Credit Management */}
+                          <button
+                            onClick={() => {
+                              handleManageCredit(row.id);
+                              setAgentId(row.id);
+                              setOpenDropdownId(null);
+                            }}
+                            className="w-full flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-all border-t border-gray-100"
+                          >
+                            {/* <indianrupee className="w-4 h-4" /> */}
+                            <span>Manage Credit</span>
+                          </button>
+
                           <button
                             onClick={() => {
                               handleManageCredit(row.id);
@@ -454,7 +418,7 @@ export default function DataTable() {
                       <span className="text-sm text-gray-600">Current Credit Limit</span>
                       <span className="text-xl font-bold text-indigo-900">
                         {new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(
-                          Number(rows.find(r => r.id === agentId).wallet_accounts[0].credit_limit || 0)
+                          Number(rows.find(r => r.id === agentId).wallet_accounts?.[0]?.credit_limit || 0)
                         )}
                       </span>
                     </div>
@@ -572,6 +536,15 @@ export default function DataTable() {
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
+
+          <Modal
+            isOpen={isViewDetailsOpen}
+            onClose={() => setIsViewDetailsOpen(false)}
+            title={viewAgentDetails ? `Agent Details - ${viewAgentDetails.contact_name}` : 'Agent Details'}
+          >
+            {viewAgentDetails && <AgentDetails agent={viewAgentDetails} />}
+          </Modal>
+
         </div>
       </div>
     </div>

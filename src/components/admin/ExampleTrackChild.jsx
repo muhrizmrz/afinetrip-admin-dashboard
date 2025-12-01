@@ -1,12 +1,39 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { changeAgentStatus } from "../../services/agentService";
 
-export default function ExampleTrackChild({is_active}) {
+export default function ExampleTrackChild({agentId, is_active}) {
   const [isActive, setIsActive] = useState(is_active);
+
+  // console.log(agentId);
+
+  const mutation = useMutation({
+      mutationFn: (payload) => changeAgentStatus(agentId, payload),
+      onSuccess: () => {
+        // toast.success(isEdit ? "Agent updated successfully" : "Agent created successfully");
+        queryClient.invalidateQueries({ queryKey: ["agents"] });
+        // if (isEdit) {
+          // queryClient.invalidateQueries({ queryKey: ["agent", agentId] });
+        // }
+        // onSuccess?.();
+      },
+      onError: (error) => {
+        const errs = error?.response?.data?.errors;
+        // if (errs) setServerErrors(errs);
+        console.log("Error changing agent status:", errs);
+        // toast.error(isEdit ? "Failed to update agent" : "Failed to create agent");
+      },
+      onSettled: () => setLoading(false),
+    });
 
   return (
     <div className="flex justify-center  items-center w-full  mx-auto">
       <button
-        onClick={() => setIsActive(!isActive)}
+        onClick={() => {
+          console.log(isActive);
+          mutation.mutate(!isActive);
+          setIsActive(!isActive);
+        }}
         className={`relative flex items-center justify-around h-8 w-32 rounded-full transition-all duration-300 ${
           isActive ? "bg-[#15144E] text-white" : "bg-[#EEEEEE]"
         } `}
