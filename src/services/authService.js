@@ -36,17 +36,15 @@ export const logout = async () => {
 };
 
 export const getCurrentUser = async () => {
+  const xsrf = getCookie("XSRF-TOKEN");
+  if (xsrf) {
+    authClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
+  } else {
+    console.warn("XSRF-TOKEN cookie not found in document.cookie");
+  }
+  
+  
   const { data } = await gatewayClient.get("/user");
   return data;
 };
 
-export const createAgent = async (agentData) => {
-  const xsrf = getCookie("XSRF-TOKEN");
-  if (xsrf) {
-    gatewayClient.defaults.headers.common["X-XSRF-TOKEN"] = xsrf;
-  } else {
-    console.warn("XSRF-TOKEN cookie not found in document.cookie");
-  }
-  const { data } = await gatewayClient.post("/agents", agentData);
-  return data;
-}
